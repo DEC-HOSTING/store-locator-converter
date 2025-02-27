@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>XML Store Locator Slay-er</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Cyberpunk styling */
+    body {
+      background-color: #1a1a2e;
+      color: #e0e0e0;
+    }
+    .cyberpunk {
+      font-family: 'Courier New', Courier, monospace;
+    }
+  </style>
+</head>
+<body class="cyberpunk">
+  <div class="container mx-auto p-6">
+    <!-- Title & Description -->
+    <h1 class="text-5xl font-extrabold mb-4 text-center text-green-400">
+      XML Store Locator Slay-er
+    </h1>
+    <p class="mb-4 text-center text-green-300">
+      Hey queen, paste your store data (straight from Excel, no cap) into the box below. Then hit “Import” to slay those rows and generate a perfectly indented XML masterpiece for you to download!
+    </p>
+
+    <!-- Paste Data Section -->
+    <div class="mb-6">
+      <label for="pasteArea" class="block mb-2 text-lg font-bold text-green-300">
+        Paste Your Excel Data (including header row):
+      </label>
+      <textarea id="pasteArea" rows="6" class="w-full p-2 bg-gray-800 text-green-200 border border-green-400 rounded" placeholder="ID	NAME OF STORE	ADDRESS	CITY	ZIP CODE	COUNTRY	PHONE	LATITUDE	LONGITUDE"></textarea>
+      <button id="importBtn" class="mt-2 bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded">
+        Import Excel Data, Slay!
+      </button>
+    </div>
+
+    <!-- Data Table (Editable) -->
+    <div class="overflow-x-auto mb-6">
+      <table id="dataTable" class="min-w-full bg-gray-800 text-green-200 border border-green-400">
+        <thead>
+          <tr>
+            <th class="px-4 py-2 border border-green-400">ID</th>
+            <th class="px-4 py-2 border border-green-400">NAME OF STORE</th>
+            <th class="px-4 py-2 border border-green-400">ADDRESS</th>
+            <th class="px-4 py-2 border border-green-400">CITY</th>
+            <th class="px-4 py-2 border border-green-400">ZIP CODE</th>
+            <th class="px-4 py-2 border border-green-400">COUNTRY</th>
+            <th class="px-4 py-2 border border-green-400">PHONE</th>
+            <th class="px-4 py-2 border border-green-400">LATITUDE</th>
+            <th class="px-4 py-2 border border-green-400">LONGITUDE</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <!-- Initially one sample row -->
+          <tr>
+            <td class="px-4 py-2 border border-green-400">
+              <input type="text" placeholder="ID" class="bg-gray-700 text-green-200 p-1 w-full" />
+            </td>
+            <td class="px-4 py-2 border border-green-400">
+              <input type="text" placeholder="NAME OF STORE" class="bg-gray-700 text-green-200 p-1 w-full" />
+            </td>
+            <td class="px-4 py-2 border border-green-400">
+              <input type="text" placeholder="ADDRESS" class="bg-gray-700 text-green-200 p-1 w-full" />
+            </td>
+            <td class="px-4 py-2 border border-green-400">
+              <input type="text" placeholder="CITY" class="bg-gray-700 text-green-200 p-1 w-full" />
+            </td>
+            <td class="px-4 py-2 border border-green-400">
+              <input type="text" placeholder="ZIP CODE" class="bg-gray-700 text-green-200 p-1 w-full" />
+            </td>
+            <td class="px-4 py-2 border border-green-400">
+              <input type="text" placeholder="COUNTRY" class="bg-gray-700 text-green-200 p-1 w-full" />
+            </td>
+            <td class="px-4 py-2 border border-green-400">
+              <input type="text" placeholder="PHONE" class="bg-gray-700 text-green-200 p-1 w-full" />
+            </td>
+            <td class="px-4 py-2 border border-green-400">
+              <input type="text" placeholder="LATITUDE" class="bg-gray-700 text-green-200 p-1 w-full" />
+            </td>
+            <td class="px-4 py-2 border border-green-400">
+              <input type="text" placeholder="LONGITUDE" class="bg-gray-700 text-green-200 p-1 w-full" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Buttons -->
+    <div class="mt-4 flex justify-center space-x-4">
+      <button id="addRowBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+        Add Extra Row, Slay More
+      </button>
+      <button id="generateBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        Generate Yassified XML
+      </button>
+    </div>
+
+    <!-- XML Output Preview -->
+    <div class="mt-6">
+      <h2 class="text-2xl font-bold text-green-400 mb-2">
+        Your Stunningly Indented XML:
+      </h2>
+      <pre id="xmlOutput" class="bg-gray-900 p-4 rounded text-green-300 overflow-x-auto"></pre>
+    </div>
+
+    <!-- Download Link -->
+    <div class="mt-4 flex justify-center">
+      <a id="downloadLink" href="#" download="importStoreLocatorMorch.xml" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
+        Download Your XML, Queen!
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // Function to escape XML special characters
+    function escapeXML(unsafe) {
+      if (!unsafe) return "";
+      return unsafe.replace(/[<>&'"]/g, function (c) {
+        switch (c) {
+          case '<': return '&lt;';
+          case '>': return '&gt;';
+          case '&': return '&amp;';
+          case "'": return '&apos;';
+          case '"': return '&quot;';
+        }
+      });
+    }
+    
+    // Function to escape HTML for attribute values
+    function escapeHTML(str) {
+      if (!str) return "";
+      return str.replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+    }
+
+    // Import data from pasted Excel text
+    document.getElementById("importBtn").addEventListener("click", function () {
+      const pasteData = document.getElementById("pasteArea").value;
+      const lines = pasteData.split(/\r?\n/);
+      if (lines.length < 2) {
+        alert("Honey, please include the header row and at least one data row!");
+        return;
+      }
+      // Assume the first line is header and skip it
+      const tableBody = document.getElementById("tableBody");
+      tableBody.innerHTML = ""; // Clear current table
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+        const cols = line.split("\t");
+        if (cols.length < 9) continue; // skip if not enough columns
+        const newRow = document.createElement("tr");
+        newRow.innerHTML = `
+          <td class="px-4 py-2 border border-green-400">
+            <input type="text" value="${escapeHTML(cols[0])}" placeholder="ID" class="bg-gray-700 text-green-200 p-1 w-full" />
+          </td>
+          <td class="px-4 py-2 border border-green-400">
+            <input type="text" value="${escapeHTML(cols[1])}" placeholder="NAME OF STORE" class="bg-gray-700 text-green-200 p-1 w-full" />
+          </td>
+          <td class="px-4 py-2 border border-green-400">
+            <input type="text" value="${escapeHTML(cols[2])}" placeholder="ADDRESS" class="bg-gray-700 text-green-200 p-1 w-full" />
+          </td>
+          <td class="px-4 py-2 border border-green-400">
+            <input type="text" value="${escapeHTML(cols[3])}" placeholder="CITY" class="bg-gray-700 text-green-200 p-1 w-full" />
+          </td>
+          <td class="px-4 py-2 border border-green-400">
+            <input type="text" value="${escapeHTML(cols[4])}" placeholder="ZIP CODE" class="bg-gray-700 text-green-200 p-1 w-full" />
+          </td>
+          <td class="px-4 py-2 border border-green-400">
+            <input type="text" value="${escapeHTML(cols[5])}" placeholder="COUNTRY" class="bg-gray-700 text-green-200 p-1 w-full" />
+          </td>
+          <td class="px-4 py-2 border border-green-400">
+            <input type="text" value="${escapeHTML(cols[6])}" placeholder="PHONE" class="bg-gray-700 text-green-200 p-1 w-full" />
+          </td>
+          <td class="px-4 py-2 border border-green-400">
+            <input type="text" value="${escapeHTML(cols[7])}" placeholder="LATITUDE" class="bg-gray-700 text-green-200 p-1 w-full" />
+          </td>
+          <td class="px-4 py-2 border border-green-400">
+            <input type="text" value="${escapeHTML(cols[8])}" placeholder="LONGITUDE" class="bg-gray-700 text-green-200 p-1 w-full" />
+          </td>
+        `;
+        tableBody.appendChild(newRow);
+      }
+    });
+
+    // Add a new empty row manually
+    document.getElementById("addRowBtn").addEventListener("click", function () {
+      const tableBody = document.getElementById("tableBody");
+      const newRow = document.createElement("tr");
+      newRow.innerHTML = `
+        <td class="px-4 py-2 border border-green-400">
+          <input type="text" placeholder="ID" class="bg-gray-700 text-green-200 p-1 w-full" />
+        </td>
+        <td class="px-4 py-2 border border-green-400">
+          <input type="text" placeholder="NAME OF STORE" class="bg-gray-700 text-green-200 p-1 w-full" />
+        </td>
+        <td class="px-4 py-2 border border-green-400">
+          <input type="text" placeholder="ADDRESS" class="bg-gray-700 text-green-200 p-1 w-full" />
+        </td>
+        <td class="px-4 py-2 border border-green-400">
+          <input type="text" placeholder="CITY" class="bg-gray-700 text-green-200 p-1 w-full" />
+        </td>
+        <td class="px-4 py-2 border border-green-400">
+          <input type="text" placeholder="ZIP CODE" class="bg-gray-700 text-green-200 p-1 w-full" />
+        </td>
+        <td class="px-4 py-2 border border-green-400">
+          <input type="text" placeholder="COUNTRY" class="bg-gray-700 text-green-200 p-1 w-full" />
+        </td>
+        <td class="px-4 py-2 border border-green-400">
+          <input type="text" placeholder="PHONE" class="bg-gray-700 text-green-200 p-1 w-full" />
+        </td>
+        <td class="px-4 py-2 border border-green-400">
+          <input type="text" placeholder="LATITUDE" class="bg-gray-700 text-green-200 p-1 w-full" />
+        </td>
+        <td class="px-4 py-2 border border-green-400">
+          <input type="text" placeholder="LONGITUDE" class="bg-gray-700 text-green-200 p-1 w-full" />
+        </td>
+      `;
+      tableBody.appendChild(newRow);
+    });
+
+    // Generate XML from table data
+    document.getElementById("generateBtn").addEventListener("click", function () {
+      const tableBody = document.getElementById("tableBody");
+      const rows = tableBody.getElementsByTagName("tr");
+
+      let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+      xml += '<stores xmlns="http://www.demandware.com/xml/impex/store/2007-04-30">\n';
+
+      for (let i = 0; i < rows.length; i++) {
+        const inputs = rows[i].getElementsByTagName("input");
+        const id = escapeXML(inputs[0].value.trim());
+        const name = escapeXML(inputs[1].value.trim());
+        const address = escapeXML(inputs[2].value.trim());
+        const city = escapeXML(inputs[3].value.trim());
+        const zipCode = escapeXML(inputs[4].value.trim());
+        const country = escapeXML(inputs[5].value.trim());
+        const phone = escapeXML(inputs[6].value.trim());
+        const latitude = escapeXML(inputs[7].value.trim());
+        const longitude = escapeXML(inputs[8].value.trim());
+
+        xml += '    <store store-id="' + id + '">\n';
+        xml += '        <name>' + name + '</name>\n';
+        xml += '        <address1>' + address + '</address1>\n';
+        xml += '        <city>' + city + '</city>\n';
+        xml += '        <postal-code>' + zipCode + '</postal-code>\n';
+        xml += '        <country-code>' + country + '</country-code>\n';
+        xml += '        <phone>' + phone + '</phone>\n';
+        xml += '        <latitude>' + latitude + '</latitude>\n';
+        xml += '        <longitude>' + longitude + '</longitude>\n';
+        xml += '        <store-locator-enabled-flag>false</store-locator-enabled-flag>\n';
+        xml += '        <demandware-pos-enabled-flag>false</demandware-pos-enabled-flag>\n';
+        xml += '        <pos-enabled-flag>false</pos-enabled-flag>\n';
+        xml += '        <custom-attributes>\n';
+        xml += '            <custom-attribute attribute-id="type">\n';
+        xml += '                <value>default</value>\n';
+        xml += '            </custom-attribute>\n';
+        xml += '        </custom-attributes>\n';
+        xml += '    </store>\n';
+      }
+      xml += '</stores>';
+
+      // Display the pretty XML in the preview area
+      document.getElementById("xmlOutput").textContent = xml;
+
+      // Create a Blob and set up the download link
+      const blob = new Blob([xml], { type: 'text/xml' });
+      const url = URL.createObjectURL(blob);
+      document.getElementById("downloadLink").href = url;
+    });
+  </script>
+</body>
+</html>
