@@ -32,7 +32,7 @@
       <label for="pasteArea" class="block mb-2 text-lg font-bold text-green-300">
         Paste Your Excel Data (including header row):
       </label>
-      <textarea id="pasteArea" rows="6" class="w-full p-2 bg-gray-800 text-green-200 border border-green-400 rounded" placeholder="ID	NAME OF STORE	ADDRESS	CITY	ZIP CODE	COUNTRY	PHONE	LATITUDE	LONGITUDE"></textarea>
+      <textarea id="pasteArea" rows="6" class="w-full p-2 bg-gray-800 text-green-200 border border-green-400 rounded" placeholder="ID	NAME OF STORE	ADDRESS	CITY	ZIP CODE	COUNTRY	PHONE	LATITUDE	LONGITUDE	SERVICE"></textarea>
       <button id="importBtn" class="mt-2 bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded">
         Import Excel Data, Slay!
       </button>
@@ -52,6 +52,7 @@
             <th class="px-4 py-2 border border-green-400">PHONE</th>
             <th class="px-4 py-2 border border-green-400">LATITUDE</th>
             <th class="px-4 py-2 border border-green-400">LONGITUDE</th>
+            <th class="px-4 py-2 border border-green-400">SERVICE</th>
           </tr>
         </thead>
         <tbody id="tableBody">
@@ -83,6 +84,9 @@
             </td>
             <td class="px-4 py-2 border border-green-400">
               <input type="text" placeholder="LONGITUDE" class="bg-gray-700 text-green-200 p-1 w-full" />
+            </td>
+            <td class="px-4 py-2 border border-green-400">
+              <input type="text" placeholder="SERVICE" class="bg-gray-700 text-green-200 p-1 w-full" />
             </td>
           </tr>
         </tbody>
@@ -155,7 +159,7 @@
         const line = lines[i].trim();
         if (!line) continue;
         const cols = line.split("\t");
-        if (cols.length < 9) continue; // skip if not enough columns
+        if (cols.length < 10) continue; // skip if not enough columns
         const newRow = document.createElement("tr");
         newRow.innerHTML = `
           <td class="px-4 py-2 border border-green-400">
@@ -184,6 +188,9 @@
           </td>
           <td class="px-4 py-2 border border-green-400">
             <input type="text" value="${escapeHTML(cols[8])}" placeholder="LONGITUDE" class="bg-gray-700 text-green-200 p-1 w-full" />
+          </td>
+          <td class="px-4 py-2 border border-green-400">
+            <input type="text" value="${escapeHTML(cols[9])}" placeholder="SERVICE" class="bg-gray-700 text-green-200 p-1 w-full" />
           </td>
         `;
         tableBody.appendChild(newRow);
@@ -222,6 +229,9 @@
         <td class="px-4 py-2 border border-green-400">
           <input type="text" placeholder="LONGITUDE" class="bg-gray-700 text-green-200 p-1 w-full" />
         </td>
+        <td class="px-4 py-2 border border-green-400">
+          <input type="text" placeholder="SERVICE" class="bg-gray-700 text-green-200 p-1 w-full" />
+        </td>
       `;
       tableBody.appendChild(newRow);
     });
@@ -245,6 +255,7 @@
         const phone = escapeXML(inputs[6].value.trim());
         const latitude = escapeXML(inputs[7].value.trim());
         const longitude = escapeXML(inputs[8].value.trim());
+        const service = escapeXML(inputs[9].value.trim());
 
         xml += '    <store store-id="' + id + '">\n';
         xml += '        <name>' + name + '</name>\n';
@@ -261,6 +272,10 @@
         xml += '        <custom-attributes>\n';
         xml += '            <custom-attribute attribute-id="type">\n';
         xml += '                <value>default</value>\n';
+        xml += '            </custom-attribute>\n';
+        xml += '            <custom-attribute attribute-id="services">\n';
+        xml += '                <value>fusio</value>\n';
+        xml += '                <value>premiere</value>\n';
         xml += '            </custom-attribute>\n';
         xml += '        </custom-attributes>\n';
         xml += '    </store>\n';
