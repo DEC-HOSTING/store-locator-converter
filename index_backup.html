@@ -13,7 +13,8 @@
       --accent-neon: #00ff00;
       --purple-glow: #8b5cf6;
       --pink-glow: #ec4899;
-      --blue-glow: #06b6d4;      --glass-bg: rgba(0, 0, 0, 0.4);
+      --blue-glow: #06b6d4;
+      --glass-bg: rgba(255, 255, 255, 0.1);
       --glass-border: rgba(255, 255, 255, 0.2);
       --dark-overlay: rgba(0, 0, 0, 0.7);
     }
@@ -62,26 +63,28 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-    }    .logo {
+    }
+
+    .logo {
       width: 120px;
       height: 120px;
       border-radius: 50%;
       border: 3px solid var(--primary-neon);
       box-shadow: 0 0 30px var(--primary-neon), inset 0 0 20px rgba(0, 255, 255, 0.2);
-      animation: logoPulse 2s ease-in-out infinite, logoGlow 3s ease-in-out infinite alternate;
+      animation: logoFloat 6s ease-in-out infinite, logoGlow 3s ease-in-out infinite alternate;
       margin-bottom: 2rem;
       object-fit: cover;
       transition: all 0.3s ease;
     }
 
     .logo:hover {
-      transform: scale(1.1);
+      transform: scale(1.1) rotate(5deg);
       box-shadow: 0 0 50px var(--primary-neon), inset 0 0 30px rgba(0, 255, 255, 0.3);
     }
 
-    @keyframes logoPulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.1); }
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(180deg); }
     }
 
     @keyframes logoGlow {
@@ -98,7 +101,6 @@
       margin-bottom: 1rem;
       background: linear-gradient(45deg, var(--primary-neon), var(--secondary-neon), var(--accent-neon));
       background-size: 300% 300%;
-      background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       animation: gradientShift 3s ease-in-out infinite, titleFloat 4s ease-in-out infinite;
@@ -122,9 +124,11 @@
       margin-bottom: 3rem;
       color: rgba(255, 255, 255, 0.8);
       animation: fadeInUp 1s ease-out 0.5s both;
-    }    .glass-card {
+    }
+
+    .glass-card {
       background: var(--glass-bg);
-      backdrop-filter: blur(40px);
+      backdrop-filter: blur(20px);
       border: 1px solid var(--glass-border);
       border-radius: 20px;
       padding: 2rem;
@@ -229,11 +233,11 @@
       border-radius: 15px;
       overflow: hidden;
       box-shadow: 0 0 30px rgba(139, 92, 246, 0.2);
-    }    .futuristic-table th {
-      background: rgba(0, 0, 0, 0.8);
-      border: 1px solid var(--primary-neon);
-      box-shadow: 0 0 15px rgba(0, 255, 255, 0.3), inset 0 0 10px rgba(0, 255, 255, 0.1);
-      color: var(--primary-neon);
+    }
+
+    .futuristic-table th {
+      background: linear-gradient(45deg, var(--purple-glow), var(--pink-glow));
+      color: white;
       padding: 1rem;
       font-family: 'Orbitron', monospace;
       font-weight: 700;
@@ -394,38 +398,6 @@
       100% { transform: scale(1); }
     }
 
-    /* Glowing Neon Scrollbars */
-    ::-webkit-scrollbar {
-      width: 12px;
-      height: 12px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.1);
-      border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: linear-gradient(45deg, var(--primary-neon), var(--secondary-neon));
-      border-radius: 10px;
-      box-shadow: 0 0 10px var(--primary-neon);
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: linear-gradient(45deg, var(--secondary-neon), var(--accent-neon));
-      box-shadow: 0 0 15px var(--secondary-neon);
-    }
-
-    ::-webkit-scrollbar-corner {
-      background: rgba(0, 0, 0, 0.1);
-    }
-
-    /* Firefox scrollbar */
-    * {
-      scrollbar-width: thin;
-      scrollbar-color: var(--primary-neon) rgba(0, 0, 0, 0.1);
-    }
-
     /* Responsive Design */
     @media (max-width: 768px) {
       .main-title {
@@ -470,137 +442,105 @@
     }
   </style>
 </head>
-<body>
-  <!-- Video Background -->
-  <video autoplay muted loop class="video-background">
-    <source src="videos/Video_of_Falling_Black_Cats.mp4" type="video/mp4">
-  </video>
-  <div class="video-overlay"></div>
-
-  <!-- Floating Particles -->
-  <div class="particle" style="top: 10%; left: 10%; animation-delay: 0s;"></div>
-  <div class="particle" style="top: 20%; left: 80%; animation-delay: 1s;"></div>
-  <div class="particle" style="top: 60%; left: 20%; animation-delay: 2s;"></div>
-  <div class="particle" style="top: 80%; left: 70%; animation-delay: 3s;"></div>
-  <div class="particle" style="top: 40%; left: 90%; animation-delay: 4s;"></div>
-
-  <!-- Mode Toggle -->
-  <div class="mode-toggle">
-    <button class="mode-btn active" onclick="toggleMode('dark')">
-      <i class="fas fa-moon"></i>
-    </button>
-    <button class="mode-btn" onclick="toggleMode('light')">
-      <i class="fas fa-sun"></i>
-    </button>
-  </div>
-
-  <div class="container">
-    <!-- Logo -->
-    <img src="imgs/Gemini_Generated_Image_e8su0e8su0e8su0e.jpg" alt="NeXus Logo" class="logo">
-    
+<body class="cyberpunk">
+  <div class="container mx-auto p-6">
     <!-- Title & Description -->
-    <h1 class="main-title">
-      NeXus Store Locator Converter
+    <h1 class="text-5xl font-extrabold mb-4 text-center text-green-400">
+      XML Store Locator Slay-er
     </h1>
-    <p class="subtitle">
-      Transform your store data into perfectly structured XML with our advanced quantum-powered converter. Experience the future of data transformation.
+    <p class="mb-4 text-center text-green-300">
+      Hey queen, paste your store data (straight from Excel, no cap) into the box below. Then hit “Import” to slay those rows and generate a perfectly indented XML masterpiece for you to download!
     </p>
 
     <!-- Paste Data Section -->
-    <div class="glass-card" style="width: 100%; max-width: 1200px;">
-      <div class="input-container">
-        <label for="pasteArea" style="display: block; margin-bottom: 1rem; font-weight: 600; color: var(--primary-neon); font-family: 'Orbitron', monospace;">
-          <i class="fas fa-paste"></i> Paste Your Excel Data (including header row):
-        </label>
-        <textarea id="pasteArea" rows="6" class="neon-textarea" placeholder="ID	NAME OF STORE	ADDRESS	CITY	ZIP CODE	COUNTRY	PHONE	LATITUDE	LONGITUDE"></textarea>
-        <button id="importBtn" class="neon-button" style="margin-top: 1rem;">
-          <i class="fas fa-upload"></i> Import Excel Data
-        </button>
-      </div>
+    <div class="mb-6">
+      <label for="pasteArea" class="block mb-2 text-lg font-bold text-green-300">
+        Paste Your Excel Data (including header row):
+      </label>
+      <textarea id="pasteArea" rows="6" class="w-full p-2 bg-gray-800 text-green-200 border border-green-400 rounded" placeholder="ID	NAME OF STORE	ADDRESS	CITY	ZIP CODE	COUNTRY	PHONE	LATITUDE	LONGITUDE"></textarea>
+      <button id="importBtn" class="mt-2 bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded">
+        Import Excel Data, Slay!
+      </button>
     </div>
 
-    <!-- Loading Animation -->
-    <div class="loading" id="loadingAnimation">
-      <div class="spinner"></div>
-      <p style="color: var(--primary-neon); font-family: 'Orbitron', monospace;">Processing quantum data...</p>
-    </div>
-
-    <!-- Data Table -->
-    <div class="glass-card" style="width: 100%; max-width: 1200px; overflow-x: auto;">
-      <table id="dataTable" class="futuristic-table">
+    <!-- Data Table (Editable) -->
+    <div class="overflow-x-auto mb-6">
+      <table id="dataTable" class="min-w-full bg-gray-800 text-green-200 border border-green-400">
         <thead>
           <tr>
-            <th style="border-radius: 15px 0 0 0;"><i class="fas fa-id-badge"></i> ID</th>
-            <th><i class="fas fa-store"></i> NAME OF STORE</th>
-            <th><i class="fas fa-map-marker-alt"></i> ADDRESS</th>
-            <th><i class="fas fa-city"></i> CITY</th>
-            <th><i class="fas fa-mail-bulk"></i> ZIP CODE</th>
-            <th><i class="fas fa-flag"></i> COUNTRY</th>
-            <th><i class="fas fa-phone"></i> PHONE</th>
-            <th><i class="fas fa-compass"></i> LATITUDE</th>
-            <th style="border-radius: 0 15px 0 0;"><i class="fas fa-compass"></i> LONGITUDE</th>
+            <th class="px-4 py-2 border border-green-400">ID</th>
+            <th class="px-4 py-2 border border-green-400">NAME OF STORE</th>
+            <th class="px-4 py-2 border border-green-400">ADDRESS</th>
+            <th class="px-4 py-2 border border-green-400">CITY</th>
+            <th class="px-4 py-2 border border-green-400">ZIP CODE</th>
+            <th class="px-4 py-2 border border-green-400">COUNTRY</th>
+            <th class="px-4 py-2 border border-green-400">PHONE</th>
+            <th class="px-4 py-2 border border-green-400">LATITUDE</th>
+            <th class="px-4 py-2 border border-green-400">LONGITUDE</th>
           </tr>
         </thead>
         <tbody id="tableBody">
           <!-- Initially one sample row -->
           <tr>
-            <td><input type="text" placeholder="ID" /></td>
-            <td><input type="text" placeholder="NAME OF STORE" /></td>
-            <td><input type="text" placeholder="ADDRESS" /></td>
-            <td><input type="text" placeholder="CITY" /></td>
-            <td><input type="text" placeholder="ZIP CODE" /></td>
-            <td><input type="text" placeholder="COUNTRY" /></td>
-            <td><input type="text" placeholder="PHONE" /></td>
-            <td><input type="text" placeholder="LATITUDE" /></td>
-            <td><input type="text" placeholder="LONGITUDE" /></td>
+            <td class="px-4 py-2 border border-green-400">
+              <input type="text" placeholder="ID" class="bg-gray-700 text-green-200 p-1 w-full" />
+            </td>
+            <td class="px-4 py-2 border border-green-400">
+              <input type="text" placeholder="NAME OF STORE" class="bg-gray-700 text-green-200 p-1 w-full" />
+            </td>
+            <td class="px-4 py-2 border border-green-400">
+              <input type="text" placeholder="ADDRESS" class="bg-gray-700 text-green-200 p-1 w-full" />
+            </td>
+            <td class="px-4 py-2 border border-green-400">
+              <input type="text" placeholder="CITY" class="bg-gray-700 text-green-200 p-1 w-full" />
+            </td>
+            <td class="px-4 py-2 border border-green-400">
+              <input type="text" placeholder="ZIP CODE" class="bg-gray-700 text-green-200 p-1 w-full" />
+            </td>
+            <td class="px-4 py-2 border border-green-400">
+              <input type="text" placeholder="COUNTRY" class="bg-gray-700 text-green-200 p-1 w-full" />
+            </td>
+            <td class="px-4 py-2 border border-green-400">
+              <input type="text" placeholder="PHONE" class="bg-gray-700 text-green-200 p-1 w-full" />
+            </td>
+            <td class="px-4 py-2 border border-green-400">
+              <input type="text" placeholder="LATITUDE" class="bg-gray-700 text-green-200 p-1 w-full" />
+            </td>
+            <td class="px-4 py-2 border border-green-400">
+              <input type="text" placeholder="LONGITUDE" class="bg-gray-700 text-green-200 p-1 w-full" />
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
 
     <!-- Buttons -->
-    <div style="display: flex; gap: 2rem; margin: 2rem 0; flex-wrap: wrap; justify-content: center;">
-      <button id="addRowBtn" class="neon-button" style="background: linear-gradient(45deg, var(--accent-neon), var(--blue-glow));">
-        <i class="fas fa-plus"></i> Add Row
+    <div class="mt-4 flex justify-center space-x-4">
+      <button id="addRowBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+        Add Extra Row, Slay More
       </button>
-      <button id="generateBtn" class="neon-button" style="background: linear-gradient(45deg, var(--blue-glow), var(--purple-glow));">
-        <i class="fas fa-code"></i> Generate XML
+      <button id="generateBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        Generate Yassified XML
       </button>
     </div>
 
     <!-- XML Output Preview -->
-    <div class="glass-card" style="width: 100%; max-width: 1200px;">
-      <h2 style="font-family: 'Orbitron', monospace; font-size: 1.5rem; margin-bottom: 1rem; color: var(--primary-neon); display: flex; align-items: center; gap: 0.5rem;">
-        <i class="fas fa-terminal"></i> Quantum XML Output
+    <div class="mt-6">
+      <h2 class="text-2xl font-bold text-green-400 mb-2">
+        Your Stunningly Indented XML:
       </h2>
-      <pre id="xmlOutput" class="xml-preview">Your beautifully structured XML will appear here...</pre>
+      <pre id="xmlOutput" class="bg-gray-900 p-4 rounded text-green-300 overflow-x-auto"></pre>
     </div>
 
     <!-- Download Link -->
-    <div style="margin: 2rem 0;">
-      <a id="downloadLink" href="#" download="importStoreLocatorMorch.xml" class="neon-button" style="background: linear-gradient(45deg, var(--secondary-neon), var(--accent-neon)); text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
-        <i class="fas fa-download"></i> Download Your XML
+    <div class="mt-4 flex justify-center">
+      <a id="downloadLink" href="#" download="importStoreLocatorMorch.xml" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
+        Download Your XML, Queen!
       </a>
     </div>
   </div>
 
   <script>
-    // Mode toggle functionality
-    function toggleMode(mode) {
-      const body = document.body;
-      const buttons = document.querySelectorAll('.mode-btn');
-      
-      buttons.forEach(btn => btn.classList.remove('active'));
-      
-      if (mode === 'light') {
-        body.classList.add('light-mode');
-        document.querySelector('button[onclick="toggleMode(\'light\')"]').classList.add('active');
-      } else {
-        body.classList.remove('light-mode');
-        document.querySelector('button[onclick="toggleMode(\'dark\')"]').classList.add('active');
-      }
-    }
-
     // Function to escape XML special characters
     function escapeXML(unsafe) {
       if (!unsafe) return "";
@@ -625,64 +565,54 @@
                 .replace(/'/g, "&#39;");
     }
 
-    // Show loading animation
-    function showLoading() {
-      document.getElementById("loadingAnimation").style.display = "block";
-    }
-
-    // Hide loading animation
-    function hideLoading() {
-      document.getElementById("loadingAnimation").style.display = "none";
-    }
-
-    // Add success animation to element
-    function addSuccessAnimation(element) {
-      element.classList.add('success-animation');
-      setTimeout(() => {
-        element.classList.remove('success-animation');
-      }, 500);
-    }
-
     // Import data from pasted Excel text
     document.getElementById("importBtn").addEventListener("click", function () {
       const pasteData = document.getElementById("pasteArea").value;
       const lines = pasteData.split(/\r?\n/);
-      
       if (lines.length < 2) {
-        alert("⚠️ Please include the header row and at least one data row!");
+        alert("Honey, please include the header row and at least one data row!");
         return;
       }
-
-      showLoading();
-      
-      setTimeout(() => {
-        const tableBody = document.getElementById("tableBody");
-        tableBody.innerHTML = ""; // Clear current table
-        
-        for (let i = 1; i < lines.length; i++) {
-          const line = lines[i].trim();
-          if (!line) continue;
-          const cols = line.split("\t");
-          if (cols.length < 9) continue; // skip if not enough columns
-          
-          const newRow = document.createElement("tr");
-          newRow.innerHTML = `
-            <td><input type="text" value="${escapeHTML(cols[0])}" placeholder="ID" /></td>
-            <td><input type="text" value="${escapeHTML(cols[1])}" placeholder="NAME OF STORE" /></td>
-            <td><input type="text" value="${escapeHTML(cols[2])}" placeholder="ADDRESS" /></td>
-            <td><input type="text" value="${escapeHTML(cols[3])}" placeholder="CITY" /></td>
-            <td><input type="text" value="${escapeHTML(cols[4])}" placeholder="ZIP CODE" /></td>
-            <td><input type="text" value="${escapeHTML(cols[5])}" placeholder="COUNTRY" /></td>
-            <td><input type="text" value="${escapeHTML(cols[6])}" placeholder="PHONE" /></td>
-            <td><input type="text" value="${escapeHTML(cols[7])}" placeholder="LATITUDE" /></td>
-            <td><input type="text" value="${escapeHTML(cols[8])}" placeholder="LONGITUDE" /></td>
-          `;
-          tableBody.appendChild(newRow);
-        }
-        
-        hideLoading();
-        addSuccessAnimation(document.getElementById("dataTable"));
-      }, 1000);
+      // Assume the first line is header and skip it
+      const tableBody = document.getElementById("tableBody");
+      tableBody.innerHTML = ""; // Clear current table
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+        const cols = line.split("\t");
+        if (cols.length < 9) continue; // skip if not enough columns
+        const newRow = document.createElement("tr");
+        newRow.innerHTML = `
+          <td class="px-4 py-2 border border-green-400">
+            <input type="text" value="${escapeHTML(cols[0])}" placeholder="ID" class="bg-gray-700 text-green-200 p-1 w-full" />
+          </td>
+          <td class="px-4 py-2 border border-green-400">
+            <input type="text" value="${escapeHTML(cols[1])}" placeholder="NAME OF STORE" class="bg-gray-700 text-green-200 p-1 w-full" />
+          </td>
+          <td class="px-4 py-2 border border-green-400">
+            <input type="text" value="${escapeHTML(cols[2])}" placeholder="ADDRESS" class="bg-gray-700 text-green-200 p-1 w-full" />
+          </td>
+          <td class="px-4 py-2 border border-green-400">
+            <input type="text" value="${escapeHTML(cols[3])}" placeholder="CITY" class="bg-gray-700 text-green-200 p-1 w-full" />
+          </td>
+          <td class="px-4 py-2 border border-green-400">
+            <input type="text" value="${escapeHTML(cols[4])}" placeholder="ZIP CODE" class="bg-gray-700 text-green-200 p-1 w-full" />
+          </td>
+          <td class="px-4 py-2 border border-green-400">
+            <input type="text" value="${escapeHTML(cols[5])}" placeholder="COUNTRY" class="bg-gray-700 text-green-200 p-1 w-full" />
+          </td>
+          <td class="px-4 py-2 border border-green-400">
+            <input type="text" value="${escapeHTML(cols[6])}" placeholder="PHONE" class="bg-gray-700 text-green-200 p-1 w-full" />
+          </td>
+          <td class="px-4 py-2 border border-green-400">
+            <input type="text" value="${escapeHTML(cols[7])}" placeholder="LATITUDE" class="bg-gray-700 text-green-200 p-1 w-full" />
+          </td>
+          <td class="px-4 py-2 border border-green-400">
+            <input type="text" value="${escapeHTML(cols[8])}" placeholder="LONGITUDE" class="bg-gray-700 text-green-200 p-1 w-full" />
+          </td>
+        `;
+        tableBody.appendChild(newRow);
+      }
     });
 
     // Add a new empty row manually
@@ -690,18 +620,35 @@
       const tableBody = document.getElementById("tableBody");
       const newRow = document.createElement("tr");
       newRow.innerHTML = `
-        <td><input type="text" placeholder="ID" /></td>
-        <td><input type="text" placeholder="NAME OF STORE" /></td>
-        <td><input type="text" placeholder="ADDRESS" /></td>
-        <td><input type="text" placeholder="CITY" /></td>
-        <td><input type="text" placeholder="ZIP CODE" /></td>
-        <td><input type="text" placeholder="COUNTRY" /></td>
-        <td><input type="text" placeholder="PHONE" /></td>
-        <td><input type="text" placeholder="LATITUDE" /></td>
-        <td><input type="text" placeholder="LONGITUDE" /></td>
+        <td class="px-4 py-2 border border-green-400">
+          <input type="text" placeholder="ID" class="bg-gray-700 text-green-200 p-1 w-full" />
+        </td>
+        <td class="px-4 py-2 border border-green-400">
+          <input type="text" placeholder="NAME OF STORE" class="bg-gray-700 text-green-200 p-1 w-full" />
+        </td>
+        <td class="px-4 py-2 border border-green-400">
+          <input type="text" placeholder="ADDRESS" class="bg-gray-700 text-green-200 p-1 w-full" />
+        </td>
+        <td class="px-4 py-2 border border-green-400">
+          <input type="text" placeholder="CITY" class="bg-gray-700 text-green-200 p-1 w-full" />
+        </td>
+        <td class="px-4 py-2 border border-green-400">
+          <input type="text" placeholder="ZIP CODE" class="bg-gray-700 text-green-200 p-1 w-full" />
+        </td>
+        <td class="px-4 py-2 border border-green-400">
+          <input type="text" placeholder="COUNTRY" class="bg-gray-700 text-green-200 p-1 w-full" />
+        </td>
+        <td class="px-4 py-2 border border-green-400">
+          <input type="text" placeholder="PHONE" class="bg-gray-700 text-green-200 p-1 w-full" />
+        </td>
+        <td class="px-4 py-2 border border-green-400">
+          <input type="text" placeholder="LATITUDE" class="bg-gray-700 text-green-200 p-1 w-full" />
+        </td>
+        <td class="px-4 py-2 border border-green-400">
+          <input type="text" placeholder="LONGITUDE" class="bg-gray-700 text-green-200 p-1 w-full" />
+        </td>
       `;
       tableBody.appendChild(newRow);
-      addSuccessAnimation(newRow);
     });
 
     // Generate XML from table data
@@ -709,72 +656,49 @@
       const tableBody = document.getElementById("tableBody");
       const rows = tableBody.getElementsByTagName("tr");
 
-      if (rows.length === 0) {
-        alert("⚠️ Please add some store data first!");
-        return;
+      let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+      xml += '<stores xmlns="http://www.demandware.com/xml/impex/store/2007-04-30">\n';
+
+      for (let i = 0; i < rows.length; i++) {
+        const inputs = rows[i].getElementsByTagName("input");
+        const id = escapeXML(inputs[0].value.trim());
+        const name = escapeXML(inputs[1].value.trim());
+        const address = escapeXML(inputs[2].value.trim());
+        const city = escapeXML(inputs[3].value.trim());
+        const zipCode = escapeXML(inputs[4].value.trim());
+        const country = escapeXML(inputs[5].value.trim());
+        const phone = escapeXML(inputs[6].value.trim());
+        const latitude = escapeXML(inputs[7].value.trim());
+        const longitude = escapeXML(inputs[8].value.trim());
+
+        xml += '    <store store-id="' + id + '">\n';
+        xml += '        <name>' + name + '</name>\n';
+        xml += '        <address1>' + address + '</address1>\n';
+        xml += '        <city>' + city + '</city>\n';
+        xml += '        <postal-code>' + zipCode + '</postal-code>\n';
+        xml += '        <country-code>' + country + '</country-code>\n';
+        xml += '        <phone>' + phone + '</phone>\n';
+        xml += '        <latitude>' + latitude + '</latitude>\n';
+        xml += '        <longitude>' + longitude + '</longitude>\n';
+        xml += '        <store-locator-enabled-flag>true</store-locator-enabled-flag>\n';
+        xml += '        <demandware-pos-enabled-flag>true</demandware-pos-enabled-flag>\n';
+        xml += '        <pos-enabled-flag>true</pos-enabled-flag>\n';
+        xml += '        <custom-attributes>\n';
+        xml += '            <custom-attribute attribute-id="type">\n';
+        xml += '                <value>default</value>\n';
+        xml += '            </custom-attribute>\n';
+        xml += '        </custom-attributes>\n';
+        xml += '    </store>\n';
       }
+      xml += '</stores>';
 
-      showLoading();
+      // Display the pretty XML in the preview area
+      document.getElementById("xmlOutput").textContent = xml;
 
-      setTimeout(() => {
-        let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
-        xml += '<stores xmlns="http://www.demandware.com/xml/impex/store/2007-04-30">\n';
-
-        for (let i = 0; i < rows.length; i++) {
-          const inputs = rows[i].getElementsByTagName("input");
-          const id = escapeXML(inputs[0].value.trim());
-          const name = escapeXML(inputs[1].value.trim());
-          const address = escapeXML(inputs[2].value.trim());
-          const city = escapeXML(inputs[3].value.trim());
-          const zipCode = escapeXML(inputs[4].value.trim());
-          const country = escapeXML(inputs[5].value.trim());
-          const phone = escapeXML(inputs[6].value.trim());
-          const latitude = escapeXML(inputs[7].value.trim());
-          const longitude = escapeXML(inputs[8].value.trim());
-
-          if (id || name || address) { // Only add stores with at least some data
-            xml += '    <store store-id="' + id + '">\n';
-            xml += '        <name>' + name + '</name>\n';
-            xml += '        <address1>' + address + '</address1>\n';
-            xml += '        <city>' + city + '</city>\n';
-            xml += '        <postal-code>' + zipCode + '</postal-code>\n';
-            xml += '        <country-code>' + country + '</country-code>\n';
-            xml += '        <phone>' + phone + '</phone>\n';
-            xml += '        <latitude>' + latitude + '</latitude>\n';
-            xml += '        <longitude>' + longitude + '</longitude>\n';
-            xml += '        <store-locator-enabled-flag>true</store-locator-enabled-flag>\n';
-            xml += '        <demandware-pos-enabled-flag>true</demandware-pos-enabled-flag>\n';
-            xml += '        <pos-enabled-flag>true</pos-enabled-flag>\n';
-            xml += '        <custom-attributes>\n';
-            xml += '            <custom-attribute attribute-id="type">\n';
-            xml += '                <value>default</value>\n';
-            xml += '            </custom-attribute>\n';
-            xml += '        </custom-attributes>\n';
-            xml += '    </store>\n';
-          }
-        }
-        xml += '</stores>';
-
-        // Display the pretty XML in the preview area
-        document.getElementById("xmlOutput").textContent = xml;
-
-        // Create a Blob and set up the download link
-        const blob = new Blob([xml], { type: 'text/xml' });
-        const url = URL.createObjectURL(blob);
-        document.getElementById("downloadLink").href = url;
-
-        hideLoading();
-        addSuccessAnimation(document.getElementById("xmlOutput"));
-      }, 1500);
-    });
-
-    // Add click sound effect (optional)
-    document.querySelectorAll('.neon-button').forEach(button => {
-      button.addEventListener('click', function() {
-        // You can add a sound effect here if desired
-        // const audio = new Audio('click-sound.mp3');
-        // audio.play();
-      });
+      // Create a Blob and set up the download link
+      const blob = new Blob([xml], { type: 'text/xml' });
+      const url = URL.createObjectURL(blob);
+      document.getElementById("downloadLink").href = url;
     });
   </script>
 </body>
