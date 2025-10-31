@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SALEM Documentation - Strategic Analytics for Location Enterprise Management</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Custom Tailwind Config -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            'sans': ['Inter', 'sans-serif'],
+            'mono': ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            salem: {
+              50: '#fdf4ff',
+              100: '#fae8ff',
+              200: '#f5d0fe',
+              300: '#f0abfc',
+              400: '#e879f9',
+              500: '#d946ef',
+              600: '#c026d3',
+              700: '#a21caf',
+              800: '#86198f',
+              900: '#701a75',
+            },
+            corporate: {
+              50: '#f8fafc',
+              100: '#f1f5f9',
+              200: '#e2e8f0',
+              300: '#cbd5e1',
+              400: '#94a3b8',
+              500: '#64748b',
+              600: '#475569',
+              700: '#334155',
+              800: '#1e293b',
+              900: '#0f172a',
+            }
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.6s ease-out',
+            'fade-in-up': 'fadeInUp 0.6s ease-out',
+            'wiggle': 'wiggle 1s ease-in-out infinite',
+            'purr': 'purr 2s ease-in-out infinite',
+            'cat-walk': 'catWalk 3s ease-in-out infinite',
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' }
+            },
+            fadeInUp: {
+              '0%': { opacity: '0', transform: 'translateY(20px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' }
+            },
+            wiggle: {
+              '0%, 100%': { transform: 'rotate(-3deg)' },
+              '50%': { transform: 'rotate(3deg)' }
+            },
+            purr: {
+              '0%, 100%': { transform: 'scale(1)' },
+              '50%': { transform: 'scale(1.05)' }
+            },
+            catWalk: {
+              '0%, 100%': { transform: 'translateX(0px)' },
+              '50%': { transform: 'translateX(10px)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .cat-pattern {
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f0abfc' fill-opacity='0.05'%3E%3Cpath d='M30 30c0-6.627-5.373-12-12-12s-12 5.373-12 12 5.373 12 12 12 12-5.373 12-12zm12 0c0-6.627-5.373-12-12-12s-12 5.373-12 12 5.373 12 12 12 12-5.373 12-12z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    
+    .paw-print {
+      position: relative;
+    }
+    
+    .paw-print::before {
+      content: '🐾';
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      font-size: 12px;
+      opacity: 0.3;
+    }
+  </style>
+</head>
+
+<body class="bg-gradient-to-br from-purple-50 to-pink-50 min-h-screen font-sans cat-pattern">
+  
+  <!-- Navigation Header -->
+  <nav class="bg-white/80 backdrop-blur-lg border-b border-purple-200 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center animate-purr">
+            <span class="text-2xl">🐱</span>
+          </div>
+          <div>
+            <h1 class="text-xl font-bold text-corporate-800">SALEM Documentation</h1>
+            <p class="text-sm text-corporate-600">Strategic Analytics for Location Enterprise Management</p>
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
+          <button onclick="window.location.href='index.html'" class="px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors">
+            ← Back to SALEM
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="py-16">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+      <div class="animate-fade-in-up">
+        <div class="inline-block mb-6">
+          <div class="relative">
+            <img style="object-position: top;" src="imgs/salemista.png" alt="Salem - Chief Feline Officer" class="w-48 h-48 rounded-full mx-auto shadow-2xl border-4 border-purple-300 object-cover" />
+            <div class="absolute -bottom-2 -right-2 bg-purple-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+              CFO 🐾
+            </div>
+          </div>
+        </div>
+        <h1 class="text-5xl font-bold text-corporate-900 mb-4">
+          Meet <span class="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Salem</span>
+        </h1>
+        <p class="text-xl text-corporate-600 mb-8 max-w-3xl mx-auto">
+          Your Strategic Analytics for Location Enterprise Management platform. SALEM has been engineered 
+          to provide enterprise-grade store locator XML generation for Kérastase and Aesop brands with advanced data processing capabilities and brand-specific customization.
+        </p>
+        <div class="inline-flex items-center space-x-2 bg-purple-100 px-6 py-3 rounded-full">
+          <span class="text-purple-600 font-medium">Powered by</span>
+          <span class="font-bold text-purple-800">Advanced Data Processing Technology™</span>
+          <span>✨</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Documentation Content -->
+  <section class="py-16">
+    <div class="max-w-7xl mx-auto px-6">
+      
+      <!-- Table of Contents -->
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        
+        <!-- Sidebar -->
+        <div class="lg:col-span-1">
+          <div class="bg-white/70 backdrop-blur-lg rounded-2xl border border-purple-200 p-6 sticky top-24">
+            <h3 class="text-lg font-bold text-corporate-800 mb-4 flex items-center">
+              📚 Table of Contents
+              <span class="ml-2 animate-cat-walk">🐱</span>
+            </h3>
+            <nav class="space-y-2">
+              <a href="#getting-started" class="block px-3 py-2 text-corporate-700 hover:bg-purple-50 rounded-lg transition-colors paw-print">Getting Started</a>
+              <a href="#salem-features" class="block px-3 py-2 text-corporate-700 hover:bg-purple-50 rounded-lg transition-colors paw-print">Salem's Features</a>
+              <a href="#brand-selection" class="block px-3 py-2 text-corporate-700 hover:bg-purple-50 rounded-lg transition-colors paw-print">Multi-Brand Support</a>
+              <a href="#data-input" class="block px-3 py-2 text-corporate-700 hover:bg-purple-50 rounded-lg transition-colors paw-print">Data Input Guide</a>
+              <a href="#xml-generation" class="block px-3 py-2 text-corporate-700 hover:bg-purple-50 rounded-lg transition-colors paw-print">XML Generation</a>
+              <a href="#best-practices" class="block px-3 py-2 text-corporate-700 hover:bg-purple-50 rounded-lg transition-colors paw-print">Best Practices</a>
+              <a href="#troubleshooting" class="block px-3 py-2 text-corporate-700 hover:bg-purple-50 rounded-lg transition-colors paw-print">Troubleshooting</a>
+              <a href="#salem-tips" class="block px-3 py-2 text-corporate-700 hover:bg-purple-50 rounded-lg transition-colors paw-print">Salem's Pro Tips</a>
+            </nav>
+          </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="lg:col-span-3 space-y-12">
+          
+          <!-- Getting Started -->
+          <section id="getting-started" class="bg-white/70 backdrop-blur-lg rounded-2xl border border-purple-200 p-8">
+            <div class="flex items-center mb-6">
+              <span class="text-3xl mr-3 animate-wiggle">🚀</span>
+              <h2 class="text-3xl font-bold text-corporate-800">Getting Started with SALEM</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6">
+                <h3 class="text-xl font-semibold text-corporate-800 mb-4 flex items-center">
+                  <span class="mr-2">🐾</span>
+                  What is SALEM?
+                </h3>
+                <p class="text-corporate-600 mb-4">
+                  SALEM (Strategic Analytics for Location Enterprise Management) is Sabrina's magical cat-powered platform 
+                  for transforming retail location data into Salesforce Commerce Cloud compatible XML files.
+                </p>
+                <div class="bg-white/60 rounded-lg p-4">
+                  <p class="text-sm text-corporate-700 italic">
+                    "With my purr-fect algorithms and feline intuition, I make data transformation as easy as catching a laser pointer!" 
+                    <span class="font-bold">- Salem, CFO</span>
+                  </p>
+                </div>
+              </div>
+              
+              <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6">
+                <h3 class="text-xl font-semibold text-corporate-800 mb-4 flex items-center">
+                  <span class="mr-2">⚡</span>
+                  Quick Start
+                </h3>
+                <ol class="space-y-2 text-corporate-600">
+                  <li class="flex items-start">
+                    <span class="font-bold text-purple-600 mr-2">1.</span>
+                    Open the SALEM platform in your browser
+                  </li>
+                  <li class="flex items-start">
+                    <span class="font-bold text-purple-600 mr-2">2.</span>
+                    Navigate to the Data Input Hub
+                  </li>
+                  <li class="flex items-start">
+                    <span class="font-bold text-purple-600 mr-2">3.</span>
+                    Add your store location data
+                  </li>
+                  <li class="flex items-start">
+                    <span class="font-bold text-purple-600 mr-2">4.</span>
+                    Let Salem work his magic!
+                  </li>
+                </ol>
+              </div>
+            </div>
+          </section>
+
+          <!-- Salem's Features -->
+          <section id="salem-features" class="bg-white/70 backdrop-blur-lg rounded-2xl border border-purple-200 p-8">
+            <div class="flex items-center mb-6">
+              <span class="text-3xl mr-3 animate-purr">✨</span>
+              <h2 class="text-3xl font-bold text-corporate-800">Salem's Magical Features</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div class="text-center">
+                <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 animate-purr">
+                  <span class="text-2xl">🎯</span>
+                </div>
+                <h3 class="text-lg font-semibold text-corporate-800 mb-2">Precision Targeting</h3>
+                <p class="text-corporate-600">Salem's keen cat senses ensure every data point is captured with feline precision.</p>
+              </div>
+              
+              <div class="text-center">
+                <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4 animate-purr">
+                  <span class="text-2xl">⚡</span>
+                </div>
+                <h3 class="text-lg font-semibold text-corporate-800 mb-2">Lightning Fast</h3>
+                <p class="text-corporate-600">Faster than a cat pouncing on a toy mouse, Salem processes your data instantly.</p>
+              </div>
+              
+              <div class="text-center">
+                <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 animate-purr">
+                  <span class="text-2xl">🛡️</span>
+                </div>
+                <h3 class="text-lg font-semibold text-corporate-800 mb-2">Enterprise Security</h3>
+                <p class="text-corporate-600">Protected by Salem's watchful eyes and enterprise-grade security protocols.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Brand Selection Guide -->
+          <section id="brand-selection" class="bg-white/70 backdrop-blur-lg rounded-2xl border border-purple-200 p-8">
+            <div class="flex items-center mb-6">
+              <span class="text-3xl mr-3 animate-cat-walk">🏷️</span>
+              <h2 class="text-3xl font-bold text-corporate-800">Multi-Brand Support</h2>
+            </div>
+            
+            <div class="space-y-6">
+              <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-6">
+                <h3 class="text-xl font-semibold text-corporate-800 mb-4 flex items-center">
+                  <span class="mr-2">🐱</span>
+                  Salem Says: "Choose Your Brand Adventure!"
+                </h3>
+                <p class="text-corporate-600 mb-4">
+                  SALEM now supports both Kérastase and Aesop brands with customized fields and services for each.
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div class="bg-white rounded-lg p-4 border border-purple-200">
+                    <h4 class="font-semibold text-corporate-800 mb-2 flex items-center">
+                      <span class="mr-2">💜</span>
+                      Kérastase Configuration
+                    </h4>
+                    <ul class="space-y-1 text-sm text-corporate-600">
+                      <li>• Optimized for salon and beauty store data</li>
+                      <li>• Fusio treatment services</li>
+                      <li>• L'Oreal Professional integration</li>
+                      <li>• Standard address format</li>
+                    </ul>
+                  </div>
+                  
+                  <div class="bg-white rounded-lg p-4 border border-purple-200">
+                    <h4 class="font-semibold text-corporate-800 mb-2 flex items-center">
+                      <span class="mr-2">🌿</span>
+                      Aesop Configuration
+                    </h4>
+                    <ul class="space-y-1 text-sm text-corporate-600">
+                      <li>• Enhanced with state/province fields</li>
+                      <li>• Email contact information support</li>
+                      <li>• Click & Collect services</li>
+                      <li>• International address flexibility</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Data Input Guide -->
+          <section id="data-input" class="bg-white/70 backdrop-blur-lg rounded-2xl border border-purple-200 p-8">
+            <div class="flex items-center mb-6">
+              <span class="text-3xl mr-3 animate-cat-walk">📊</span>
+              <h2 class="text-3xl font-bold text-corporate-800">Data Input Guide</h2>
+            </div>
+            
+            <div class="space-y-6">
+              <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-6">
+                <h3 class="text-xl font-semibold text-corporate-800 mb-4 flex items-center">
+                  <span class="mr-2">🐱</span>
+                  Salem Says: "Meow-ster Your Data!"
+                </h3>
+                <p class="text-corporate-600 mb-4">
+                  Follow these purr-fect steps to ensure your store location data is properly formatted:
+                </p>
+              </div>
+              
+              <!-- Bulk Import Guide -->
+              <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200">
+                <h3 class="text-xl font-semibold text-corporate-800 mb-4 flex items-center">
+                  <span class="mr-2">📋</span>
+                  Excel Bulk Import - The Fast Track!
+                </h3>
+                <p class="text-corporate-600 mb-4">
+                  SALEM's most powerful feature! Copy data directly from Excel spreadsheets for instant processing.
+                </p>
+                
+                <div class="bg-white rounded-lg p-4 mb-4">
+                  <h4 class="font-semibold text-corporate-800 mb-2">How to Use:</h4>
+                  <ol class="space-y-1 text-sm text-corporate-600 list-decimal list-inside">
+                    <li>Select your brand (Kérastase or Aesop) first</li>
+                    <li>Copy rows from your Excel spreadsheet (Ctrl+C)</li>
+                    <li>Paste the data in the bulk import text area</li>
+                    <li>Click "Import Data" - SALEM handles the rest!</li>
+                    <li>Review and edit the imported data if needed</li>
+                    <li>Generate your XML as usual</li>
+                  </ol>
+                </div>
+                
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                  <p class="text-sm text-yellow-800">
+                    <strong>💡 Pro Tip:</strong> Excel data is automatically detected as tab-separated values. 
+                    No need to manually format - just copy and paste!
+                  </p>
+                </div>
+              </div>
+              
+              <div class="space-y-6">
+                  <div>
+                    <h4 class="font-semibold text-corporate-800 mb-2">Universal Fields:</h4>
+                    <ul class="space-y-1 text-sm text-corporate-600">
+                      <li>• Store ID (unique identifier)</li>
+                      <li>• Location Name</li>
+                      <li>• Address 1 (primary address)</li>
+                      <li>• Address 2 (suite, floor, optional)</li>
+                      <li>• City</li>
+                      <li>• Postal Code</li>
+                      <li>• Country Code</li>
+                      <li>• Phone Number</li>
+                      <li>• Services (brand-specific)</li>
+                      <li>• Latitude & Longitude</li>
+                      <li>• Store Capabilities (Online Order, Pickup)</li>
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h4 class="font-semibold text-corporate-800 mb-2">Brand-Specific Fields:</h4>
+                    <ul class="space-y-1 text-sm text-corporate-600">
+                      <li><strong>Aesop Only:</strong></li>
+                      <li>• State/Province Code</li>
+                      <li>• Email Address</li>
+                      <li>• Click & Collect services</li>
+                      <li><strong>Kérastase:</strong></li>
+                      <li>• Fusio treatments</li>
+                      <li>• L'Oreal Professional services</li>
+                    </ul>
+                  </div>
+                  
+                  <div class="md:col-span-2 mt-4">
+                    <h4 class="font-semibold text-corporate-800 mb-2">Salem's Multi-Brand Tips:</h4>
+                    <ul class="space-y-1 text-sm text-corporate-600">
+                      <li>🏷️ Select your brand first to customize the interface</li>
+                      <li>🐾 Use consistent naming conventions within each brand</li>
+                      <li>🐾 Validate coordinates before input</li>
+                      <li>🐾 Include country codes (US, CA, AU, etc.)</li>
+                      <li>🐾 Format phone numbers consistently per region</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Sample Data Table -->
+              <div class="bg-white rounded-xl border border-purple-200 overflow-hidden">
+                <div class="bg-gradient-to-r from-purple-100 to-pink-100 px-6 py-3">
+                  <h4 class="font-semibold text-corporate-800 flex items-center">
+                    <span class="mr-2">📋</span>
+                    Sample Data Format
+                  </h4>
+                </div>
+                <div class="overflow-x-auto">
+                  <table class="w-full text-sm">
+                    <thead class="bg-gray-50">
+                      <tr>
+                        <th class="px-4 py-2 text-left font-semibold text-corporate-700">Store ID</th>
+                        <th class="px-4 py-2 text-left font-semibold text-corporate-700">Name</th>
+                        <th class="px-4 py-2 text-left font-semibold text-corporate-700">Address 1</th>
+                        <th class="px-4 py-2 text-left font-semibold text-corporate-700">Address 2</th>
+                        <th class="px-4 py-2 text-left font-semibold text-corporate-700">Services</th>
+                        <th class="px-4 py-2 text-left font-semibold text-corporate-700">City</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                      <tr>
+                        <td class="px-4 py-2 text-corporate-600">SALEM_001</td>
+                        <td class="px-4 py-2 text-corporate-600">Salem's Flagship Store</td>
+                        <td class="px-4 py-2 text-corporate-600">123 Whiskers Avenue</td>
+                        <td class="px-4 py-2 text-corporate-600">Suite 100</td>
+                        <td class="px-4 py-2 text-corporate-600">Fusio Treatment</td>
+                        <td class="px-4 py-2 text-corporate-600">Cat City</td>
+                      </tr>
+                      <tr>
+                        <td class="px-4 py-2 text-corporate-600">SALEM_002</td>
+                        <td class="px-4 py-2 text-corporate-600">Purr-fect Paws Location</td>
+                        <td class="px-4 py-2 text-corporate-600">456 Meow Street</td>
+                        <td class="px-4 py-2 text-corporate-600">Floor 2</td>
+                        <td class="px-4 py-2 text-corporate-600">Kerastase</td>
+                        <td class="px-4 py-2 text-corporate-600">Feline Heights</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- XML Generation -->
+          <section id="xml-generation" class="bg-white/70 backdrop-blur-lg rounded-2xl border border-purple-200 p-8">
+            <div class="flex items-center mb-6">
+              <span class="text-3xl mr-3 animate-wiggle">⚙️</span>
+              <h2 class="text-3xl font-bold text-corporate-800">XML Generation Process</h2>
+            </div>
+            
+            <div class="space-y-6">
+              <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6">
+                <h3 class="text-xl font-semibold text-corporate-800 mb-4 flex items-center">
+                  <span class="mr-2">🔮</span>
+                  Salem's XML Magic
+                </h3>
+                <p class="text-corporate-600 mb-4">
+                  When you're ready to transform your data, Salem performs his special XML magic ritual:
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div class="bg-white/60 rounded-lg p-4 text-center">
+                    <div class="text-2xl mb-2 animate-purr">🐾</div>
+                    <h4 class="font-semibold text-corporate-800 mb-1">Step 1</h4>
+                    <p class="text-sm text-corporate-600">Data Validation</p>
+                  </div>
+                  <div class="bg-white/60 rounded-lg p-4 text-center">
+                    <div class="text-2xl mb-2 animate-wiggle">✨</div>
+                    <h4 class="font-semibold text-corporate-800 mb-1">Step 2</h4>
+                    <p class="text-sm text-corporate-600">XML Generation</p>
+                  </div>
+                  <div class="bg-white/60 rounded-lg p-4 text-center">
+                    <div class="text-2xl mb-2 animate-cat-walk">📦</div>
+                    <h4 class="font-semibold text-corporate-800 mb-1">Step 3</h4>
+                    <p class="text-sm text-corporate-600">Download Ready</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="bg-corporate-900 rounded-xl p-6">
+                <h4 class="text-lg font-semibold text-white mb-4 flex items-center">
+                  <span class="mr-2">📄</span>
+                  Sample XML Output
+                </h4>
+                <pre class="text-green-400 text-sm overflow-x-auto">
+<code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;stores xmlns="http://www.demandware.com/xml/impex/store/2007-04-30"&gt;
+    &lt;store store-id="SALEM_001"&gt;
+        &lt;name&gt;Salem's Flagship Store&lt;/name&gt;
+        &lt;address1&gt;123 Whiskers Avenue&lt;/address1&gt;
+        &lt;city&gt;Cat City&lt;/city&gt;
+        &lt;postal-code&gt;12345&lt;/postal-code&gt;
+        &lt;country-code&gt;US&lt;/country-code&gt;
+        &lt;!-- Additional store attributes --&gt;
+    &lt;/store&gt;
+&lt;/stores&gt;</code>
+                </pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- Salem's Pro Tips -->
+          <section id="salem-tips" class="bg-white/70 backdrop-blur-lg rounded-2xl border border-purple-200 p-8">
+            <div class="flex items-center mb-6">
+              <span class="text-3xl mr-3 animate-purr">💡</span>
+              <h2 class="text-3xl font-bold text-corporate-800">Salem's Pro Tips</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="space-y-4">
+                <div class="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg p-4 border-l-4 border-yellow-400">
+                  <h4 class="font-semibold text-corporate-800 mb-2 flex items-center">
+                    <span class="mr-2">🐱</span>
+                    Batch Processing
+                  </h4>
+                  <p class="text-sm text-corporate-600">
+                    "I recommend processing stores in batches of 50-100 for optimal purr-formance!"
+                  </p>
+                </div>
+                
+                <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border-l-4 border-green-400">
+                  <h4 class="font-semibold text-corporate-800 mb-2 flex items-center">
+                    <span class="mr-2">🎯</span>
+                    Data Accuracy
+                  </h4>
+                  <p class="text-sm text-corporate-600">
+                    "Always double-check your coordinates - I have keen eyes for spotting fishy data!"
+                  </p>
+                </div>
+              </div>
+              
+              <div class="space-y-4">
+                <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-4 border-l-4 border-purple-400">
+                  <h4 class="font-semibold text-corporate-800 mb-2 flex items-center">
+                    <span class="mr-2">⚡</span>
+                    Performance Tips
+                  </h4>
+                  <p class="text-sm text-corporate-600">
+                    "Keep your browser tab active during processing - I work best when I have your attention!"
+                  </p>
+                </div>
+                
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border-l-4 border-blue-400">
+                  <h4 class="font-semibold text-corporate-800 mb-2 flex items-center">
+                    <span class="mr-2">🔒</span>
+                    Security Note
+                  </h4>
+                  <p class="text-sm text-corporate-600">
+                    "All data processing happens locally in your browser - your secrets are safe with me!"
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-corporate-800 text-white py-12">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+      <div class="flex items-center justify-center space-x-4 mb-6">
+        <span class="text-3xl animate-purr">🐱</span>
+        <div>
+          <h3 class="text-xl font-bold">SALEM</h3>
+          <p class="text-corporate-300">Strategic Analytics for Location Enterprise Management</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+        <div>
+          <h4 class="text-lg font-semibold mb-4">Salem's Services</h4>
+          <ul class="space-y-2 text-corporate-300">
+            <li>• Purr-fect Data Processing</li>
+            <li>• Enterprise XML Generation</li>
+            <li>• Feline-Grade Security</li>
+            <li>• 24/7 Cat Support</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold mb-4">Contact Salem</h4>
+          <p class="text-corporate-300">salem@sabrina-enterprises.com</p>
+          <p class="text-corporate-300">1-800-MEOW-NOW</p>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold mb-4">Powered By</h4>
+          <p class="text-corporate-300">Sabrina's Magical Cat Technology™</p>
+          <p class="text-corporate-300">Licensed Familiar Solutions</p>
+        </div>
+      </div>
+      <div class="border-t border-corporate-700 pt-8">
+        <p class="text-corporate-400">
+          &copy; 2025 Salem & Sabrina Enterprises™. All paws reserved. 
+          <span class="animate-wiggle inline-block">🐾</span>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Smooth scrolling for navigation
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Add some cat-themed interactions
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add purr sound effect on hover (optional)
+      const catElements = document.querySelectorAll('[class*="animate-purr"]');
+      catElements.forEach(element => {
+        element.addEventListener('mouseenter', function() {
+          // Could add a purr sound effect here
+          console.log('*purr*');
+        });
+      });
+    });
+  </script>
+</body>
+</html>

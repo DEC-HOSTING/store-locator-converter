@@ -3,608 +3,2104 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>NeXus Store Locator Converter</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <title>SALEM - Strategic Analytics for Location Enterprise Management</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Custom Tailwind Config -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            'sans': ['Inter', 'sans-serif'],
+            'mono': ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            salem: {
+              50: '#fdf4ff',
+              100: '#fae8ff',
+              200: '#f5d0fe',
+              300: '#f0abfc',
+              400: '#e879f9',
+              500: '#d946ef',
+              600: '#c026d3',
+              700: '#a21caf',
+              800: '#86198f',
+              900: '#701a75',
+            },
+            corporate: {
+              50: '#f8fafc',
+              100: '#f1f5f9',
+              200: '#e2e8f0',
+              300: '#cbd5e1',
+              400: '#94a3b8',
+              500: '#64748b',
+              600: '#475569',
+              700: '#334155',
+              800: '#1e293b',
+              900: '#0f172a',
+            },
+            accent: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            }
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.6s ease-out',
+            'fade-in-up': 'fadeInUp 0.6s ease-out',
+            'slide-in': 'slideIn 0.8s ease-out',
+            'pulse-subtle': 'pulseSubtle 2s ease-in-out infinite',
+            'bounce-subtle': 'bounceSubtle 1s ease-in-out',
+            'purr': 'purr 2s ease-in-out infinite',
+            'cat-walk': 'catWalk 3s ease-in-out infinite',
+            'glow': 'glow 2s ease-in-out infinite alternate',
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' }
+            },
+            fadeInUp: {
+              '0%': { opacity: '0', transform: 'translateY(20px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' }
+            },
+            slideIn: {
+              '0%': { opacity: '0', transform: 'translateX(-20px)' },
+              '100%': { opacity: '1', transform: 'translateX(0)' }
+            },
+            pulseSubtle: {
+              '0%, 100%': { opacity: '1' },
+              '50%': { opacity: '0.8' }
+            },
+            bounceSubtle: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-2px)' }
+            },
+            purr: {
+              '0%, 100%': { transform: 'scale(1)' },
+              '50%': { transform: 'scale(1.05)' }
+            },
+            catWalk: {
+              '0%, 100%': { transform: 'translateX(0px)' },
+              '50%': { transform: 'translateX(10px)' }
+            },
+            glow: {
+              '0%': { boxShadow: '0 0 5px rgba(59, 130, 246, 0.5)' },
+              '100%': { boxShadow: '0 0 20px rgba(59, 130, 246, 0.8)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
   <style>
-    :root {
-      --primary-neon: #00ffff;
-      --secondary-neon: #ff00ff;
-      --accent-neon: #00ff00;
-      --purple-glow: #8b5cf6;
-      --pink-glow: #ec4899;
-      --blue-glow: #06b6d4;      --glass-bg: rgba(0, 0, 0, 0.4);
-      --glass-border: rgba(255, 255, 255, 0.2);
-      --dark-overlay: rgba(0, 0, 0, 0.7);
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Exo 2', sans-serif;
-      background: #0a0a0a;
-      color: #ffffff;
-      overflow-x: hidden;
-      position: relative;
-      min-height: 100vh;
-    }
-
-    .video-background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      object-fit: cover;
-      z-index: -2;
-      opacity: 0.4;
-    }
-
-    .video-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1), rgba(6, 182, 212, 0.1));
-      z-index: -1;
-    }
-
-    .container {
-      position: relative;
-      z-index: 1;
-      min-height: 100vh;
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }    .logo {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      border: 3px solid var(--primary-neon);
-      box-shadow: 0 0 30px var(--primary-neon), inset 0 0 20px rgba(0, 255, 255, 0.2);
-      animation: logoPulse 2s ease-in-out infinite, logoGlow 3s ease-in-out infinite alternate;
-      margin-bottom: 2rem;
-      object-fit: cover;
-      transition: all 0.3s ease;
-    }
-
-    .logo:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 50px var(--primary-neon), inset 0 0 30px rgba(0, 255, 255, 0.3);
-    }
-
-    @keyframes logoPulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-    }
-
-    @keyframes logoGlow {
-      0% { border-color: var(--primary-neon); box-shadow: 0 0 30px var(--primary-neon), inset 0 0 20px rgba(0, 255, 255, 0.2); }
-      50% { border-color: var(--secondary-neon); box-shadow: 0 0 30px var(--secondary-neon), inset 0 0 20px rgba(255, 0, 255, 0.2); }
-      100% { border-color: var(--accent-neon); box-shadow: 0 0 30px var(--accent-neon), inset 0 0 20px rgba(0, 255, 0, 0.2); }
-    }
-
-    .main-title {
-      font-family: 'Orbitron', monospace;
-      font-size: 4rem;
-      font-weight: 900;
-      text-align: center;
-      margin-bottom: 1rem;
-      background: linear-gradient(45deg, var(--primary-neon), var(--secondary-neon), var(--accent-neon));
-      background-size: 300% 300%;
-      background-clip: text;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: gradientShift 3s ease-in-out infinite, titleFloat 4s ease-in-out infinite;
-      text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
-      letter-spacing: 0.1em;
-    }
-
-    @keyframes gradientShift {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-    }
-
-    @keyframes titleFloat {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
-    }
-
-    .subtitle {
-      font-size: 1.2rem;
-      text-align: center;
-      margin-bottom: 3rem;
-      color: rgba(255, 255, 255, 0.8);
-      animation: fadeInUp 1s ease-out 0.5s both;
-    }    .glass-card {
-      background: var(--glass-bg);
-      backdrop-filter: blur(40px);
-      border: 1px solid var(--glass-border);
-      border-radius: 20px;
-      padding: 2rem;
-      margin: 1rem 0;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(139, 92, 246, 0.1);
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-      animation: slideInUp 0.8s ease-out both;
-    }
-
-    .glass-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-      transition: left 0.5s ease;
-    }
-
-    .glass-card:hover::before {
-      left: 100%;
-    }
-
-    .glass-card:hover {
-      transform: translateY(-10px) scale(1.02);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(139, 92, 246, 0.2);
-    }
-
-    .neon-button {
-      background: linear-gradient(45deg, var(--purple-glow), var(--pink-glow));
-      border: none;
-      border-radius: 50px;
-      padding: 1rem 2rem;
-      font-family: 'Orbitron', monospace;
-      font-weight: 700;
-      color: white;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-    }
-
-    .neon-button::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-      transition: left 0.3s ease;
-    }
-
-    .neon-button:hover::before {
-      left: 100%;
-    }
-
-    .neon-button:hover {
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 10px 30px rgba(139, 92, 246, 0.6), 0 0 40px rgba(236, 72, 153, 0.4);
-    }
-
-    .neon-button:active {
-      transform: translateY(-1px) scale(1.02);
-    }
-
-    .input-container {
-      position: relative;
-      margin: 1rem 0;
-    }
-
-    .neon-input, .neon-textarea {
-      width: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      border: 2px solid rgba(139, 92, 246, 0.3);
-      border-radius: 15px;
-      padding: 1rem;
-      color: white;
-      font-family: 'Exo 2', sans-serif;
-      transition: all 0.3s ease;
+    /* Subtle glass effect */
+    .glass-effect {
       backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
-    .neon-input:focus, .neon-textarea:focus {
-      outline: none;
-      border-color: var(--primary-neon);
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3), inset 0 0 10px rgba(0, 255, 255, 0.1);
-      transform: scale(1.02);
+    /* Corporate grid pattern */
+    .corporate-bg {
+      background-image: 
+        linear-gradient(rgba(59, 130, 246, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.02) 1px, transparent 1px);
+      background-size: 20px 20px;
     }
 
-    .futuristic-table {
-      width: 100%;
+    /* Hover effects */
+    .hover-lift {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .hover-lift:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Corporate table styling */
+    .corporate-table {
       border-collapse: separate;
       border-spacing: 0;
-      background: rgba(0, 0, 0, 0.7);
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 0 30px rgba(139, 92, 246, 0.2);
-    }    .futuristic-table th {
-      background: rgba(0, 0, 0, 0.8);
-      border: 1px solid var(--primary-neon);
-      box-shadow: 0 0 15px rgba(0, 255, 255, 0.3), inset 0 0 10px rgba(0, 255, 255, 0.1);
-      color: var(--primary-neon);
-      padding: 1rem;
-      font-family: 'Orbitron', monospace;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      position: relative;
     }
-
-    .futuristic-table td {
-      padding: 0.5rem;
-      border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+    .corporate-table td {
+      border-bottom: 1px solid #e2e8f0;
+      border-right: 1px solid #e2e8f0;
     }
-
-    .futuristic-table input {
-      width: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      border: 1px solid rgba(139, 92, 246, 0.3);
+    .corporate-table td:last-child {
+      border-right: none;
+    }
+    .corporate-table tr:last-child td {
+      border-bottom: none;
+    }
+    
+    /* Corporate form elements */
+    .corporate-select {
+      padding: 8px 12px;
+      border: 1px solid #d1d5db;
       border-radius: 8px;
-      padding: 0.5rem;
-      color: white;
-      transition: all 0.3s ease;
+      background-color: white;
+      font-size: 14px;
+      transition: all 0.2s ease;
     }
-
-    .futuristic-table input:focus {
-      border-color: var(--primary-neon);
-      box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+    .corporate-select:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #a855f7;
+      border-color: transparent;
     }
-
-    .xml-preview {
-      background: rgba(0, 0, 0, 0.9);
-      border: 2px solid var(--primary-neon);
-      border-radius: 15px;
-      padding: 2rem;
-      font-family: 'Courier New', monospace;
-      color: var(--accent-neon);
-      white-space: pre-wrap;
-      max-height: 400px;
-      overflow-y: auto;
-      position: relative;
-      box-shadow: 0 0 30px rgba(0, 255, 255, 0.2), inset 0 0 20px rgba(0, 255, 255, 0.1);
-    }
-
-    .xml-preview::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--primary-neon), transparent);
-      animation: scanLine 2s linear infinite;
-    }
-
-    @keyframes scanLine {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(100%); }
-    }
-
-    .particle {
-      position: absolute;
-      width: 4px;
-      height: 4px;
-      background: var(--primary-neon);
-      border-radius: 50%;
-      animation: float 6s ease-in-out infinite;
-      opacity: 0.7;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0px) translateX(0px); }
-      25% { transform: translateY(-20px) translateX(10px); }
-      50% { transform: translateY(-40px) translateX(-10px); }
-      75% { transform: translateY(-20px) translateX(5px); }
-    }
-
-    .mode-toggle {
-      position: fixed;
-      top: 2rem;
-      right: 2rem;
-      z-index: 1000;
-      background: var(--glass-bg);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--glass-border);
-      border-radius: 50px;
-      padding: 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .mode-btn {
-      background: none;
-      border: none;
-      color: white;
-      padding: 0.5rem 1rem;
-      border-radius: 25px;
+    
+    .corporate-checkbox {
+      width: 18px;
+      height: 18px;
+      accent-color: #a855f7;
       cursor: pointer;
-      transition: all 0.3s ease;
-      font-size: 1rem;
     }
-
-    .mode-btn.active {
-      background: var(--primary-neon);
-      color: black;
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
-    }
-
-    .loading {
+    
+    /* Brand-specific field visibility */
+    .aesop-field {
       display: none;
-      text-align: center;
-      margin: 2rem 0;
     }
-
-    .spinner {
-      width: 50px;
-      height: 50px;
-      border: 3px solid rgba(0, 255, 255, 0.3);
-      border-top: 3px solid var(--primary-neon);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin: 0 auto 1rem;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes slideInUp {
-      from {
-        opacity: 0;
-        transform: translateY(50px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .success-animation {
-      animation: successPulse 0.5s ease-in-out;
-    }
-
-    @keyframes successPulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); box-shadow: 0 0 50px rgba(0, 255, 0, 0.5); }
-      100% { transform: scale(1); }
-    }
-
-    /* Glowing Neon Scrollbars */
-    ::-webkit-scrollbar {
-      width: 12px;
-      height: 12px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.1);
-      border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: linear-gradient(45deg, var(--primary-neon), var(--secondary-neon));
-      border-radius: 10px;
-      box-shadow: 0 0 10px var(--primary-neon);
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: linear-gradient(45deg, var(--secondary-neon), var(--accent-neon));
-      box-shadow: 0 0 15px var(--secondary-neon);
-    }
-
-    ::-webkit-scrollbar-corner {
-      background: rgba(0, 0, 0, 0.1);
-    }
-
-    /* Firefox scrollbar */
-    * {
-      scrollbar-width: thin;
-      scrollbar-color: var(--primary-neon) rgba(0, 0, 0, 0.1);
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      .main-title {
-        font-size: 2.5rem;
-      }
-      
-      .container {
-        padding: 1rem;
-      }
-      
-      .glass-card {
-        padding: 1rem;
-      }
-      
-      .mode-toggle {
-        top: 1rem;
-        right: 1rem;
-      }
-    }
-
-    /* Light Mode */
-    body.light-mode {
-      background: #f0f0f0;
-      color: #333;
-    }
-
-    body.light-mode .video-overlay {
-      background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2), rgba(6, 182, 212, 0.2));
-    }
-
-    body.light-mode .glass-card {
-      background: rgba(255, 255, 255, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      color: #333;
-    }
-
-    body.light-mode .neon-input,
-    body.light-mode .neon-textarea,
-    body.light-mode .futuristic-table input {
-      background: rgba(255, 255, 255, 0.8);
-      color: #333;
+    
+    .brand-aesop .aesop-field {
+      display: table-cell;
     }
   </style>
 </head>
-<body>
-  <!-- Video Background -->
-  <video autoplay muted loop class="video-background">
-    <source src="videos/Video_of_Falling_Black_Cats.mp4" type="video/mp4">
-  </video>
-  <div class="video-overlay"></div>
 
-  <!-- Floating Particles -->
-  <div class="particle" style="top: 10%; left: 10%; animation-delay: 0s;"></div>
-  <div class="particle" style="top: 20%; left: 80%; animation-delay: 1s;"></div>
-  <div class="particle" style="top: 60%; left: 20%; animation-delay: 2s;"></div>
-  <div class="particle" style="top: 80%; left: 70%; animation-delay: 3s;"></div>
-  <div class="particle" style="top: 40%; left: 90%; animation-delay: 4s;"></div>
-
-  <!-- Mode Toggle -->
-  <div class="mode-toggle">
-    <button class="mode-btn active" onclick="toggleMode('dark')">
-      <i class="fas fa-moon"></i>
-    </button>
-    <button class="mode-btn" onclick="toggleMode('light')">
-      <i class="fas fa-sun"></i>
-    </button>
-  </div>
-
-  <div class="container">
-    <!-- Logo -->
-    <img src="imgs/Gemini_Generated_Image_e8su0e8su0e8su0e.jpg" alt="NeXus Logo" class="logo">
-    
-    <!-- Title & Description -->
-    <h1 class="main-title">
-      NeXus Store Locator Converter
-    </h1>
-    <p class="subtitle">
-      Transform your store data into perfectly structured XML with our advanced quantum-powered converter. Experience the future of data transformation.
-    </p>
-
-    <!-- Paste Data Section -->
-    <div class="glass-card" style="width: 100%; max-width: 1200px;">
-      <div class="input-container">
-        <label for="pasteArea" style="display: block; margin-bottom: 1rem; font-weight: 600; color: var(--primary-neon); font-family: 'Orbitron', monospace;">
-          <i class="fas fa-paste"></i> Paste Your Excel Data (including header row):
-        </label>
-        <textarea id="pasteArea" rows="6" class="neon-textarea" placeholder="ID	NAME OF STORE	ADDRESS	CITY	ZIP CODE	COUNTRY	PHONE	LATITUDE	LONGITUDE"></textarea>
-        <button id="importBtn" class="neon-button" style="margin-top: 1rem;">
-          <i class="fas fa-upload"></i> Import Excel Data
-        </button>
+<body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen font-sans corporate-bg">
+  
+  <!-- Navigation Header -->
+  <nav class="glass-effect border-b border-white/20 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
+            <span class="text-2xl">🐱</span>
+          </div>
+          <div>
+            <h1 class="text-xl font-bold text-corporate-800">SALEM</h1>
+            <p class="text-sm text-corporate-600">Strategic Analytics for Location Enterprise Management</p>
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
+            ✓ Enterprise Ready
+          </span>
+          <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium flex items-center">
+            <span class="mr-1">🐾</span> SALEM v2.1.0
+          </span>
+        </div>
       </div>
     </div>
+  </nav>
 
-    <!-- Loading Animation -->
-    <div class="loading" id="loadingAnimation">
-      <div class="spinner"></div>
-      <p style="color: var(--primary-neon); font-family: 'Orbitron', monospace;">Processing quantum data...</p>
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-6 py-16">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        
+        <!-- Hero Content -->
+        <div class="space-y-8 animate-fade-in-up">
+          <div class="space-y-4">
+            <h1 class="text-5xl font-bold text-corporate-900 leading-tight">
+              Meet
+              <span class="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                SALEM
+              </span>
+              <br />Your Feline Data Expert
+            </h1>
+            <p class="text-xl text-corporate-600 leading-relaxed">
+              Strategic Analytics for Location Enterprise Management - powered by our advanced SALEM platform, 
+              delivering enterprise-grade store locator XML generation for Kérastase and Aesop brands with precision and efficiency.
+            </p>
+          </div>
+          
+          <!-- Corporate Buzzword Badges -->
+          <div class="flex flex-wrap gap-3">
+            <span class="px-4 py-2 bg-white/60 backdrop-blur rounded-lg text-corporate-700 font-medium border border-white/40 hover-lift">
+              📊 Excel Bulk Import
+            </span>
+            <span class="px-4 py-2 bg-white/60 backdrop-blur rounded-lg text-corporate-700 font-medium border border-white/40 hover-lift">
+              🏷️ Multi-Brand Support
+            </span>
+            <span class="px-4 py-2 bg-white/60 backdrop-blur rounded-lg text-corporate-700 font-medium border border-white/40 hover-lift">
+              ⚡ Real-time Data Transformation
+            </span>
+            <span class="px-4 py-2 bg-white/60 backdrop-blur rounded-lg text-corporate-700 font-medium border border-white/40 hover-lift">
+              📊 Business Intelligence
+            </span>
+          </div>
+
+          <!-- CTA Buttons -->
+          <div class="flex flex-col sm:flex-row gap-4">
+            <button onclick="scrollToWorkspace()" class="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all duration-300 hover-lift">
+              � Launch SALEM Platform
+            </button>
+            <button onclick="window.open('documentation.html', '_blank')" class="px-8 py-4 bg-white/80 backdrop-blur text-corporate-700 rounded-lg font-semibold border border-white/40 hover:bg-white/90 transition-all duration-300 hover-lift">
+              📚 Platform Documentation
+            </button>
+          </div>
+        </div>
+
+        <!-- Hero Image -->
+        <div class="relative animate-fade-in">
+          <div class="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-3xl blur-3xl"></div>
+          <div class="relative bg-white/40 backdrop-blur-xl rounded-3xl p-8 border border-white/30">
+            <img src="imgs/salemista.png" alt="Salem - Chief Feline Officer & Data Transformation Expert" class="w-full h-auto rounded-2xl shadow-2xl hover-lift object-cover" />
+            <div class="absolute top-4 right-4 bg-purple-500 text-white px-3 py-1 rounded-full text-sm font-medium flex items-center">
+              <span class="mr-1">🐾</span> SALEM Active
+            </div>
+            <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur text-corporate-700 px-4 py-2 rounded-lg font-medium">
+              <span class="text-sm">Chief Feline Officer</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </section>
 
-    <!-- Data Table -->
-    <div class="glass-card" style="width: 100%; max-width: 1200px; overflow-x: auto;">
-      <table id="dataTable" class="futuristic-table">
-        <thead>
-          <tr>
-            <th style="border-radius: 15px 0 0 0;"><i class="fas fa-id-badge"></i> ID</th>
-            <th><i class="fas fa-store"></i> NAME OF STORE</th>
-            <th><i class="fas fa-map-marker-alt"></i> ADDRESS</th>
-            <th><i class="fas fa-city"></i> CITY</th>
-            <th><i class="fas fa-mail-bulk"></i> ZIP CODE</th>
-            <th><i class="fas fa-flag"></i> COUNTRY</th>
-            <th><i class="fas fa-phone"></i> PHONE</th>
-            <th><i class="fas fa-compass"></i> LATITUDE</th>
-            <th style="border-radius: 0 15px 0 0;"><i class="fas fa-compass"></i> LONGITUDE</th>
-          </tr>
-        </thead>
-        <tbody id="tableBody">
-          <!-- Initially one sample row -->
-          <tr>
-            <td><input type="text" placeholder="ID" /></td>
-            <td><input type="text" placeholder="NAME OF STORE" /></td>
-            <td><input type="text" placeholder="ADDRESS" /></td>
-            <td><input type="text" placeholder="CITY" /></td>
-            <td><input type="text" placeholder="ZIP CODE" /></td>
-            <td><input type="text" placeholder="COUNTRY" /></td>
-            <td><input type="text" placeholder="PHONE" /></td>
-            <td><input type="text" placeholder="LATITUDE" /></td>
-            <td><input type="text" placeholder="LONGITUDE" /></td>
-          </tr>
-        </tbody>
-      </table>
+  <!-- Main Workspace -->
+  <section id="workspace" class="py-16">
+    <div class="max-w-7xl mx-auto px-6">
+      
+      <!-- Section Header -->
+      <div class="text-center mb-12 animate-fade-in-up">
+        <h2 class="text-3xl font-bold text-corporate-900 mb-4">
+          SALEM Data Transformation Platform
+        </h2>
+        <p class="text-lg text-corporate-600 max-w-3xl mx-auto">
+          Transform your retail location data into enterprise-ready XML format with our advanced SALEM platform. 
+          Designed for maximum operational efficiency and seamless Salesforce Commerce Cloud integration.
+        </p>
+      </div>
+
+      <!-- Tabs Navigation -->
+      <div class="bg-white/70 backdrop-blur-lg rounded-2xl border border-white/30 shadow-xl overflow-hidden">
+        
+        <!-- Tab Headers -->
+        <div class="border-b border-gray-200 bg-gray-50/50">
+          <nav class="flex space-x-8 px-6" aria-label="Tabs">
+            <button onclick="switchTab('input')" id="tab-input" class="tab-button py-4 px-1 border-b-2 border-purple-500 font-medium text-sm text-purple-600">
+              📊 Data Input Center
+            </button>
+            <button onclick="switchTab('processing')" id="tab-processing" class="tab-button py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
+              ⚙️ Processing Engine
+            </button>
+            <button onclick="switchTab('output')" id="tab-output" class="tab-button py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
+              📋 XML Output
+            </button>
+          </nav>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="p-6">
+          
+          <!-- Data Input Tab -->
+          <div id="content-input" class="tab-content">
+            <div class="space-y-6">
+              
+              <!-- Controls -->
+              <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                  <h3 class="text-xl font-semibold text-corporate-800 flex items-center">
+                    <span class="mr-2">🏬</span>
+                    Store Location Data Management
+                  </h3>
+                  <p class="text-corporate-600">Configure your retail ecosystem with enterprise precision</p>
+                </div>
+                <button onclick="addStoreRow()" class="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-lg font-medium hover:from-purple-600 hover:to-pink-700 transition-all duration-300 hover-lift">
+                  ➕ Add Store Location
+                </button>
+              </div>
+
+              <!-- Brand Selection -->
+              <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-6 border border-purple-200">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <h4 class="text-lg font-semibold text-corporate-800 flex items-center mb-2">
+                      <span class="mr-2">🏷️</span>
+                      Brand Configuration
+                    </h4>
+                    <p class="text-corporate-600 text-sm">Select your brand to customize data fields and services</p>
+                  </div>
+                  <div class="flex space-x-4">
+                    <label class="flex items-center cursor-pointer">
+                      <input type="radio" name="brand" value="kerastase" checked class="mr-2 text-purple-600" onchange="switchBrand('kerastase')">
+                      <span class="text-corporate-800 font-medium">Kérastase</span>
+                    </label>
+                    <label class="flex items-center cursor-pointer">
+                      <input type="radio" name="brand" value="aesop" class="mr-2 text-purple-600" onchange="switchBrand('aesop')">
+                      <span class="text-corporate-800 font-medium">Aesop</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bulk Import Section -->
+              <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200">
+                <div class="flex items-center justify-between mb-4">
+                  <div>
+                    <h4 class="text-lg font-semibold text-corporate-800 flex items-center mb-2">
+                      <span class="mr-2">📊</span>
+                      Bulk Excel Data Import
+                    </h4>
+                    <p class="text-corporate-600 text-sm">Paste your Excel data directly from spreadsheets for instant processing</p>
+                  </div>
+                  <div class="flex space-x-2">
+                    <button onclick="showImportHelp()" class="px-3 py-1 bg-blue-100 text-blue-700 rounded text-sm hover:bg-blue-200 transition-colors">
+                      ❓ Format Help
+                    </button>
+                    <button onclick="clearImportData()" class="px-3 py-1 bg-gray-100 text-gray-700 rounded text-sm hover:bg-gray-200 transition-colors">
+                      🗑️ Clear
+                    </button>
+                  </div>
+                </div>
+                
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium text-corporate-700 mb-2">
+                      Paste Excel Data (Tab-separated format)
+                    </label>
+                    <textarea 
+                      id="excelDataInput" 
+                      rows="6" 
+                      class="w-full px-3 py-2 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 font-mono text-sm"
+                      placeholder="Paste your copied Excel data here...&#10;Example:&#10;STORE_001	Store Name	123 Main St	Suite 100	New York	NY	10001	US	store@example.com	+1-555-0123	fusio	40.7128	-74.0060"
+                    ></textarea>
+                  </div>
+                  
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-corporate-600">
+                      <span class="font-medium">💡 Tip:</span> 
+                      <span>Paste data with headers for automatic column detection, or without for standard order</span>
+                    </div>
+                    <button 
+                      onclick="importExcelData()" 
+                      class="px-6 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg font-medium hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 hover-lift">
+                      📥 Import Data
+                    </button>
+                  </div>
+                  
+                  <!-- Import Status -->
+                  <div id="importStatus" class="hidden p-3 rounded-lg">
+                    <div class="flex items-center">
+                      <span id="importIcon" class="mr-2"></span>
+                      <span id="importMessage" class="font-medium"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Table Container -->
+              <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-lg">
+                <div class="overflow-x-auto">
+                  <table class="corporate-table w-full">
+                    <thead class="bg-gradient-to-r from-gray-50 to-blue-50">
+                      <tr>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-corporate-700 uppercase tracking-wider">Store ID</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-corporate-700 uppercase tracking-wider">Location Name</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-corporate-700 uppercase tracking-wider">Address 1</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-corporate-700 uppercase tracking-wider">Address 2</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-corporate-700 uppercase tracking-wider">City</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-corporate-700 uppercase tracking-wider aesop-field">State</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-corporate-700 uppercase tracking-wider">Postal Code</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-corporate-700 uppercase tracking-wider">Country</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-corporate-700 uppercase tracking-wider aesop-field">Email</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-corporate-700 uppercase tracking-wider">Phone</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-corporate-700 uppercase tracking-wider aesop-field">Store Hours</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-corporate-700 uppercase tracking-wider aesop-field">Page Title</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-corporate-700 uppercase tracking-wider aesop-field">Store Images</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-corporate-700 uppercase tracking-wider">Services</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-corporate-700 uppercase tracking-wider">Latitude</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-corporate-700 uppercase tracking-wider">Longitude</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-corporate-700 uppercase tracking-wider">Online Order</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-corporate-700 uppercase tracking-wider">Pickup</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-corporate-700 uppercase tracking-wider">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="storeTableBody" class="bg-white divide-y divide-gray-200">
+                      <!-- Dynamic rows will be added here -->
+                    </tbody>
+                  </table>
+                </div>
+                
+                <!-- Empty State -->
+                <div id="emptyState" class="text-center py-12">
+                  <div class="mx-auto w-24 h-24 bg-gradient-to-r from-purple-100 to-pink-100 rounded-full flex items-center justify-center mb-4">
+                    <span class="text-4xl">�</span>
+                  </div>
+                  <h3 class="text-lg font-medium text-corporate-800 mb-2">Ready for Enterprise Data Input</h3>
+                  <p class="text-corporate-600 mb-4">Begin your data transformation by adding store location information</p>
+                  <button onclick="addStoreRow()" class="px-6 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors">
+                    Add First Store Location
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Processing Tab -->
+          <div id="content-processing" class="tab-content hidden">
+            <div class="space-y-6">
+              <div class="text-center">
+                <div class="mb-6">
+                  <span class="text-6xl">⚙️</span>
+                </div>
+                <h3 class="text-xl font-semibold text-corporate-800 mb-4">SALEM XML Generation Engine</h3>
+                <p class="text-corporate-600 mb-8">Deploy our advanced processing algorithms to transform your data into Salesforce Commerce Cloud compatible XML</p>
+                
+                <div class="max-w-md mx-auto space-y-4">
+                  <button onclick="validateForSFCC()" class="w-full px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 hover-lift text-lg">
+                    🔍 Validate SFCC Compliance
+                  </button>
+                  
+                  <button onclick="generateXML()" id="generateBtn" class="w-full px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all duration-300 hover-lift text-lg">
+                    🚀 Execute Transformation
+                  </button>
+                  
+                  <!-- Processing Status -->
+                  <div id="processingStatus" class="hidden space-y-4">
+                    <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                      <div class="flex items-center space-x-3">
+                        <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-600"></div>
+                        <span class="text-purple-800 font-medium">Processing data transformation...</span>
+                        <span>⚙️</span>
+                      </div>
+                      <div class="mt-3 bg-purple-200 rounded-full h-2">
+                        <div id="progressBar" class="bg-purple-600 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Output Tab -->
+          <div id="content-output" class="tab-content hidden">
+            <div class="space-y-6">
+              <div class="flex justify-between items-center">
+                <div>
+                  <h3 class="text-xl font-semibold text-corporate-800 flex items-center">
+                    <span class="mr-2">📄</span>
+                    Enterprise XML Output
+                  </h3>
+                  <p class="text-corporate-600">Salesforce Commerce Cloud ready data structure</p>
+                </div>
+                <button onclick="downloadXML()" id="downloadBtn" class="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg font-medium hover:from-green-600 hover:to-emerald-700 transition-all duration-300 hover-lift disabled:opacity-50" disabled>
+                  📥 Download XML File
+                </button>
+              </div>
+              
+              <div class="bg-corporate-900 rounded-xl p-6 font-mono text-sm overflow-auto max-h-96">
+                <pre id="xmlOutput" class="text-green-400 whitespace-pre-wrap">
+No data processed yet. Please add store locations and generate XML to see results.
+                </pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </section>
 
-    <!-- Buttons -->
-    <div style="display: flex; gap: 2rem; margin: 2rem 0; flex-wrap: wrap; justify-content: center;">
-      <button id="addRowBtn" class="neon-button" style="background: linear-gradient(45deg, var(--accent-neon), var(--blue-glow));">
-        <i class="fas fa-plus"></i> Add Row
-      </button>
-      <button id="generateBtn" class="neon-button" style="background: linear-gradient(45deg, var(--blue-glow), var(--purple-glow));">
-        <i class="fas fa-code"></i> Generate XML
-      </button>
+  <!-- Footer -->
+  <footer class="bg-corporate-800 text-white py-12">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <h4 class="text-lg font-semibold mb-4 flex items-center">
+            <span class="mr-2">�</span>
+            SALEM Platform
+          </h4>
+          <p class="text-corporate-300">Delivering enterprise-grade data transformation solutions with advanced analytics and seamless integration capabilities.</p>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold mb-4">Platform Features</h4>
+          <ul class="space-y-2 text-corporate-300">
+            <li>• Real-time Data Processing</li>
+            <li>• Enterprise Security</li>
+            <li>• Scalable Infrastructure</li>
+            <li>• 24/7 Technical Support</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold mb-4">Contact Support</h4>
+          <p class="text-corporate-300">thomas.nicoli@loreal.com</p>
+          <p class="text-corporate-300">1-800-SALEM-01</p>
+        </div>
+      </div>
+      <div class="border-t border-corporate-700 mt-8 pt-8 text-center text-corporate-400">
+        <p>&copy; 2025 SALEM Platform Solutions™. All rights reserved. Enterprise software licensed technology. 🐾</p>
+      </div>
     </div>
+  </footer>
 
-    <!-- XML Output Preview -->
-    <div class="glass-card" style="width: 100%; max-width: 1200px;">
-      <h2 style="font-family: 'Orbitron', monospace; font-size: 1.5rem; margin-bottom: 1rem; color: var(--primary-neon); display: flex; align-items: center; gap: 0.5rem;">
-        <i class="fas fa-terminal"></i> Quantum XML Output
-      </h2>
-      <pre id="xmlOutput" class="xml-preview">Your beautifully structured XML will appear here...</pre>
-    </div>
+  <!-- Hidden download link -->
+  <a id="downloadLink" style="display: none;"></a>
 
-    <!-- Download Link -->
-    <div style="margin: 2rem 0;">
-      <a id="downloadLink" href="#" download="importStoreLocatorMorch.xml" class="neon-button" style="background: linear-gradient(45deg, var(--secondary-neon), var(--accent-neon)); text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
-        <i class="fas fa-download"></i> Download Your XML
-      </a>
+  <!-- Audio for error notifications -->
+  <audio id="errorBeep" preload="auto" style="display: none;">
+    <source src="audio/beep.mp3" type="audio/mpeg">
+    <!-- Fallback for browsers that don't support MP3 -->
+    <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmESBzqN1fPNfC0GI3PH9OKVRAwSWq/o6qNRFQ1Hnt/yuWIDCDuGyfLLfSsHL3O/8N2VQAoSXK7n66dUFAlBl9z0vmARAzV5w+nP8eXi2pNPFBRNbX6fKAAAkQ2PqG5PbJdXLq4qYjI2YRCnFWUWaBEJiEAe3L4KWB8ELHe/7b2hfz8HZKDlkm0z8LvVoVEdO3eJ5uLgp7CYKDQ3JIjP8o+0sgQ4dpzu4+W7zKvOQN3kp1dQnN1jMwqPjHzp" type="audio/wav">
+  </audio>
+
+  <!-- SFCC Validation Modal -->
+  <div id="validationModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-hidden">
+      <!-- Header -->
+      <div class="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-2xl font-bold text-white flex items-center">
+              <span class="mr-3">🔍</span>
+              SFCC Validation Report
+            </h2>
+            <p class="text-purple-100 text-sm">Salesforce Commerce Cloud Compliance Check</p>
+          </div>
+          <button onclick="closeValidationModal()" class="text-white hover:text-purple-200 transition-colors">
+            <span class="text-2xl">×</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Content -->
+      <div class="p-6 overflow-y-auto max-h-[70vh]">
+        <!-- Progress Section -->
+        <div id="validationProgress" class="mb-6">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-corporate-800 font-medium">Validation Progress</span>
+            <span id="validationProgressText" class="text-sm text-corporate-600">Starting validation...</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-3">
+            <div id="validationProgressBar" class="bg-gradient-to-r from-purple-500 to-pink-500 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+        </div>
+        
+        <!-- Summary Cards -->
+        <div id="validationSummary" class="grid grid-cols-3 gap-4 mb-6 hidden">
+          <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
+            <div class="text-2xl font-bold text-red-600" id="errorCount">0</div>
+            <div class="text-sm text-red-700">Critical Errors</div>
+          </div>
+          <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center">
+            <div class="text-2xl font-bold text-yellow-600" id="warningCount">0</div>
+            <div class="text-sm text-yellow-700">Warnings</div>
+          </div>
+          <div class="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
+            <div class="text-2xl font-bold text-green-600" id="successCount">0</div>
+            <div class="text-sm text-green-700">Valid Stores</div>
+          </div>
+        </div>
+        
+        <!-- Validation Results -->
+        <div id="validationResults" class="space-y-4 hidden">
+          <!-- Results will be populated here -->
+        </div>
+      </div>
+      
+      <!-- Footer -->
+      <div class="bg-gray-50 px-6 py-4 border-t flex justify-between items-center">
+        <div class="text-sm text-corporate-600">
+          <span id="validationStatus">Ready to validate</span>
+        </div>
+        <div class="flex space-x-3">
+          <button onclick="closeValidationModal()" class="px-4 py-2 text-corporate-600 hover:text-corporate-800 transition-colors">
+            Cancel
+          </button>
+          <button id="proceedWithWarnings" onclick="proceedWithValidation()" class="px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors hidden">
+            Proceed with Warnings
+          </button>
+          <button id="fixIssues" onclick="closeValidationModal()" class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors hidden">
+            Fix Issues First
+          </button>
+          <button id="generateXMLBtn" onclick="proceedWithValidation()" class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors hidden">
+            Generate XML
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
-    // Mode toggle functionality
-    function toggleMode(mode) {
-      const body = document.body;
-      const buttons = document.querySelectorAll('.mode-btn');
+    // Global variables
+    let storeData = [];
+    let generatedXML = '';
+
+    // Tab switching functionality
+    function switchTab(tabName) {
+      // Hide all tab contents
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.add('hidden');
+      });
       
-      buttons.forEach(btn => btn.classList.remove('active'));
+      // Remove active state from all tab buttons
+      document.querySelectorAll('.tab-button').forEach(button => {
+        button.classList.remove('border-purple-500', 'text-purple-600');
+        button.classList.add('border-transparent', 'text-gray-500');
+      });
       
-      if (mode === 'light') {
-        body.classList.add('light-mode');
-        document.querySelector('button[onclick="toggleMode(\'light\')"]').classList.add('active');
-      } else {
-        body.classList.remove('light-mode');
-        document.querySelector('button[onclick="toggleMode(\'dark\')"]').classList.add('active');
+      // Show selected tab content
+      document.getElementById(`content-${tabName}`).classList.remove('hidden');
+      
+      // Add active state to selected tab button
+      const activeTab = document.getElementById(`tab-${tabName}`);
+      activeTab.classList.remove('border-transparent', 'text-gray-500');
+      activeTab.classList.add('border-purple-500', 'text-purple-600');
+    }
+
+    // Scroll to workspace
+    function scrollToWorkspace() {
+      document.getElementById('workspace').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Add new store row
+    function addStoreRow() {
+      const tableBody = document.getElementById('storeTableBody');
+      const emptyState = document.getElementById('emptyState');
+      
+      // Hide empty state if this is the first row
+      if (tableBody.children.length === 0) {
+        emptyState.style.display = 'none';
+      }
+      
+      const rowIndex = tableBody.children.length;
+      const currentBrand = document.querySelector('input[name="brand"]:checked').value;
+      const row = document.createElement('tr');
+      row.className = 'hover:bg-gray-50 animate-fade-in-up';
+      
+      // Get services options based on selected brand
+      const servicesOptions = getServicesOptions(currentBrand);
+      
+      row.innerHTML = `
+        <td class="px-4 py-3"><input type="text" class="corporate-input w-full" placeholder="SALEM_${String(rowIndex + 1).padStart(3, '0')}" /></td>
+        <td class="px-4 py-3"><input type="text" class="corporate-input w-full" placeholder="Store Name" /></td>
+        <td class="px-4 py-3"><input type="text" class="corporate-input w-full" placeholder="123 Main Street" /></td>
+        <td class="px-4 py-3"><input type="text" class="corporate-input w-full" placeholder="Suite 100" /></td>
+        <td class="px-4 py-3"><input type="text" class="corporate-input w-full" placeholder="City" /></td>
+        <td class="px-4 py-3 aesop-field"><input type="text" class="corporate-input w-full" placeholder="State/Province" /></td>
+        <td class="px-4 py-3"><input type="text" class="corporate-input w-full" placeholder="12345" /></td>
+        <td class="px-4 py-3"><input type="text" class="corporate-input w-full" placeholder="US" /></td>
+        <td class="px-4 py-3 aesop-field"><input type="email" class="corporate-input w-full" placeholder="store@aesop.com" /></td>
+        <td class="px-4 py-3"><input type="text" class="corporate-input w-full" placeholder="+1-555-0123" /></td>
+        <td class="px-4 py-3 aesop-field"><textarea class="corporate-input w-full" placeholder="Mon-Fri: 9am-6pm" rows="2"></textarea></td>
+        <td class="px-4 py-3 aesop-field"><input type="text" class="corporate-input w-full" placeholder="Store Page Title" /></td>
+        <td class="px-4 py-3 aesop-field"><input type="text" class="corporate-input w-full" placeholder="images/stores/store.jpg" /></td>
+        <td class="px-2 py-3">
+          <select class="corporate-select w-full">
+            <option value="">Select Service</option>
+            ${servicesOptions}
+          </select>
+        </td>
+        <td class="px-4 py-3"><input type="text" class="corporate-input w-full" placeholder="40.7128" /></td>
+        <td class="px-4 py-3"><input type="text" class="corporate-input w-full" placeholder="-74.0060" /></td>
+        <td class="px-2 py-3 text-center">
+          <input type="checkbox" class="corporate-checkbox" checked />
+        </td>
+        <td class="px-2 py-3 text-center">
+          <input type="checkbox" class="corporate-checkbox" checked />
+        </td>
+        <td class="px-4 py-3">
+          <button onclick="deleteRow(this)" class="px-3 py-1 bg-red-100 text-red-600 rounded hover:bg-red-200 transition-colors text-sm">
+            🗑️
+          </button>
+        </td>
+      `;
+      
+      tableBody.appendChild(row);
+      
+      // Add input styling
+      row.querySelectorAll('input[type="text"], input[type="email"]').forEach(input => {
+        input.className = 'w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200';
+      });
+      
+      // Style select elements
+      row.querySelectorAll('select').forEach(select => {
+        select.className = 'w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 bg-white';
+      });
+      
+      // Style checkboxes
+      row.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.className = 'w-5 h-5 text-purple-600 border-gray-300 rounded focus:ring-purple-500 focus:ring-2';
+      });
+      
+      // Animate the new row
+      setTimeout(() => {
+        row.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 100);
+    }
+
+    // Get services options based on brand
+    function getServicesOptions(brand) {
+      const services = {
+        kerastase: [
+          { value: 'fusio', label: 'Fusio Treatment' },
+          { value: 'kerastase', label: 'Kerastase' },
+          { value: 'loreal', label: 'L\'Oreal Professional' },
+          { value: 'full-service', label: 'Full Service Salon' }
+        ],
+        aesop: [
+          { value: 'ClickAndCollect', label: 'Click & Collect' },
+          { value: 'consultation', label: 'Skin Consultation' },
+          { value: 'gift-wrapping', label: 'Gift Wrapping' },
+          { value: 'default', label: 'Standard Aesop Services' }
+        ]
+      };
+      
+      return services[brand].map(service => 
+        `<option value="${service.value}">${service.label}</option>`
+      ).join('');
+    }
+
+    // Switch brand configuration
+    function switchBrand(brand) {
+      const table = document.querySelector('.corporate-table').closest('.bg-white');
+      table.className = table.className.replace(/brand-\w+/, '') + ` brand-${brand}`;
+      
+      // Update existing service dropdowns
+      document.querySelectorAll('select.corporate-select').forEach(select => {
+        const currentValue = select.value;
+        select.innerHTML = '<option value="">Select Service</option>' + getServicesOptions(brand);
+        
+        // Try to preserve selection if it exists in new options
+        const newOption = select.querySelector(`option[value="${currentValue}"]`);
+        if (newOption) {
+          select.value = currentValue;
+        }
+      });
+    }
+
+    // Show import help
+    function showImportHelp() {
+      const currentBrand = document.querySelector('input[name="brand"]:checked').value;
+      const helpMessage = `📋 Smart Excel Import\n\n` +
+        `SALEM automatically detects your column structure!\n\n` +
+        `✅ WITH HEADERS (Recommended):\n` +
+        `Copy your Excel data INCLUDING the header row. SALEM will automatically detect which column is which, regardless of order.\n\n` +
+        `✅ WITHOUT HEADERS:\n` +
+        `Copy just the data rows in this order:\n` +
+        (currentBrand === 'aesop' 
+          ? 'Store ID, Name, Address1, Address2, City, State, Postal, Country, Email, Phone, Store Hours, Page Title, Store Images, Services, Latitude, Longitude'
+          : 'Store ID, Name, Address1, Address2, City, Postal, Country, Phone, Services, Latitude, Longitude') +
+        `\n\n💡 Supported header variations:\n` +
+        `• "Store ID", "StoreID", "ID", "Location ID"\n` +
+        `• "Latitude", "Lat", "GPS Lat"\n` +
+        `• "Postal Code", "Zip", "Postcode"\n` +
+        `• And many more!\n\n` +
+        `Just paste and SALEM will figure it out! 🚀`;
+      
+      alert(helpMessage);
+    }
+
+    // Clear import data
+    function clearImportData() {
+      document.getElementById('excelDataInput').value = '';
+      hideImportStatus();
+    }
+
+    // Import Excel data
+    function importExcelData() {
+      const textarea = document.getElementById('excelDataInput');
+      const data = textarea.value.trim();
+      
+      if (!data) {
+        showImportStatus('error', '⚠️', 'Please paste some data first!');
+        return;
+      }
+      
+      try {
+        const currentBrand = document.querySelector('input[name="brand"]:checked').value;
+        
+        // Detect delimiter before parsing
+        const lines = data.split('\n').filter(line => line.trim());
+        const delimiter = detectDelimiter(lines[0]);
+        const delimiterName = delimiter === '\t' ? 'Tab-separated (Excel)' : 
+                            delimiter === ',' ? 'Comma-separated (CSV)' : 
+                            'Space-delimited';
+        
+        const rows = parseExcelData(data, currentBrand);
+        
+        if (rows.length === 0) {
+          showImportStatus('error', '⚠️', 'No valid data rows found. Please check your format.');
+          return;
+        }
+        
+        // Clear existing table data
+        const tableBody = document.getElementById('storeTableBody');
+        tableBody.innerHTML = '';
+        
+        // Add parsed rows to table
+        rows.forEach(rowData => {
+          addStoreRowWithData(rowData, currentBrand);
+        });
+        
+        // Hide empty state
+        document.getElementById('emptyState').style.display = 'none';
+        
+        // Show success with detection info
+        const firstLineCells = smartSplit(lines[0], delimiter);
+        const columnMapping = detectColumnHeaders(firstLineCells, currentBrand);
+        
+        let successMsg = `Successfully imported ${rows.length} store${rows.length > 1 ? 's' : ''}!`;
+        if (columnMapping.hasHeaders) {
+          const detectedCols = Object.values(columnMapping.mapping).length;
+          successMsg += ` (${delimiterName}, ${detectedCols} columns detected)`;
+        } else {
+          successMsg += ` (${delimiterName})`;
+        }
+        
+        showImportStatus('success', '✅', successMsg);
+        
+        // Clear the textarea
+        setTimeout(() => {
+          textarea.value = '';
+          hideImportStatus();
+        }, 4000);
+        
+      } catch (error) {
+        console.error('Import error:', error);
+        showImportStatus('error', '❌', 'Import failed: ' + error.message);
       }
     }
 
-    // Function to escape XML special characters
-    function escapeXML(unsafe) {
-      if (!unsafe) return "";
-      return unsafe.replace(/[<>&'"]/g, function (c) {
+    // Merge multi-line store records (for Aesop Excel format where each store spans 3-4 lines)
+    function mergeMultiLineRecords(lines) {
+      const merged = [];
+      let i = 0;
+      
+      while (i < lines.length) {
+        const line = lines[i].trim();
+        if (!line) {
+          i++;
+          continue;
+        }
+        
+        // Check if this looks like a store ID line (starts with numeric/alphanumeric ID)
+        const firstPart = line.split(/[\t\s]+/)[0];
+        const isStoreIdLine = /^[0-9A-Z\-]{2,10}$/i.test(firstPart) && 
+                             !firstPart.includes(',') && 
+                             !firstPart.startsWith('[');
+        
+        if (isStoreIdLine && i + 2 < lines.length) {
+          // This is a store record - merge next 2-3 lines
+          const record = {
+            line1: line,
+            line2: lines[i + 1] || '',
+            line3: lines[i + 2] || '',
+            line4: i + 3 < lines.length ? lines[i + 3] : ''
+          };
+          
+          // Check if line4 is another store ID (not part of this record)
+          const line4FirstPart = record.line4.split(/[\t\s]+/)[0];
+          const line4IsNewStore = /^[0-9A-Z\-]{2,10}$/i.test(line4FirstPart);
+          
+          if (line4IsNewStore) {
+            // Only merge 3 lines
+            merged.push(record);
+            i += 3;
+          } else {
+            // Merge all 4 lines
+            merged.push(record);
+            i += 4;
+          }
+        } else {
+          // Single line record
+          merged.push({ line1: line, line2: '', line3: '', line4: '' });
+          i++;
+        }
+      }
+      
+      console.log(`📦 Merged ${lines.length} lines into ${merged.length} records`);
+      return merged;
+    }
+
+    // Parse Excel data (TSV format) with smart column detection
+    function parseExcelData(data, brand) {
+      const lines = data.split('\n').filter(line => line.trim());
+      const rows = [];
+      
+      if (lines.length === 0) return rows;
+      
+      // Check if this looks like multi-line Aesop format
+      const hasMultiLinePattern = lines.some((line, idx) => {
+        if (idx === 0) return false;
+        const firstPart = line.trim().split(/[\t\s]+/)[0];
+        // Line starts with coordinates or arrays (continuation of previous record)
+        return /^-?\d+[,\.]\d+/.test(firstPart) || firstPart.startsWith('[');
+      });
+      
+      if (hasMultiLinePattern) {
+        console.log('🔄 Detected multi-line Aesop Excel format');
+        const mergedRecords = mergeMultiLineRecords(lines);
+        
+        mergedRecords.forEach(record => {
+          const rowData = parseAesopMultiLineRecord(record);
+          if (rowData) rows.push(rowData);
+        });
+        
+        return rows;
+      }
+      
+      // Detect delimiter type from first line
+      const delimiter = detectDelimiter(lines[0]);
+      console.log('📊 Detected delimiter:', delimiter === '\t' ? 'TAB' : delimiter === ',' ? 'COMMA' : 'SPACES');
+      
+      // Try to detect if first row is headers
+      const firstLineCells = smartSplit(lines[0], delimiter);
+      const columnMapping = detectColumnHeaders(firstLineCells, brand);
+      
+      // Determine starting row (skip headers if detected)
+      const startRow = columnMapping.hasHeaders ? 1 : 0;
+      
+      // Show detected column mapping to user
+      if (columnMapping.hasHeaders) {
+        console.log('📋 Detected columns:', columnMapping.mapping);
+      }
+      
+      lines.slice(startRow).forEach((line, index) => {
+        const cells = smartSplit(line, delimiter);
+        
+        // Skip empty rows
+        if (cells.length < 3) return;
+        
+        try {
+          const rowData = parseRowWithMapping(cells, columnMapping.mapping, brand);
+          
+          // Only add rows that have at least a store ID or name
+          if (rowData.storeId || rowData.name) {
+            rows.push(rowData);
+          }
+        } catch (error) {
+          console.warn(`Skipping row ${index + startRow + 1}: ${error.message}`);
+        }
+      });
+      
+      return rows;
+    }
+
+    // Detect the delimiter used in the data
+    function detectDelimiter(sampleLine) {
+      // Count different delimiter types
+      const tabCount = (sampleLine.match(/\t/g) || []).length;
+      const commaCount = (sampleLine.match(/,/g) || []).length;
+      const multiSpaceCount = (sampleLine.match(/\s{2,}/g) || []).length;
+      
+      // If we have tabs, it's tab-delimited (Excel paste)
+      if (tabCount >= 3) return '\t';
+      
+      // If we have commas, it's CSV
+      if (commaCount >= 3) return ',';
+      
+      // If we have multiple consecutive spaces, use that as delimiter
+      if (multiSpaceCount >= 3) return /\s{2,}/;
+      
+      // Default to tab (standard Excel)
+      return '\t';
+    }
+
+    // Smart split that handles different delimiters
+    function smartSplit(line, delimiter) {
+      if (delimiter instanceof RegExp) {
+        // For regex delimiters (like multiple spaces), split and clean
+        return line.split(delimiter)
+          .map(cell => cell.trim())
+          .filter(cell => cell.length > 0);
+      } else {
+        // For simple delimiters (tab, comma)
+        return line.split(delimiter).map(cell => cell.trim());
+      }
+    }
+
+    // Detect column headers and create mapping
+    function detectColumnHeaders(cells, brand) {
+      const mapping = {};
+      let hasHeaders = false;
+      
+      // Define possible header names for each field (case-insensitive, flexible)
+      const headerPatterns = {
+        storeId: ['store id', 'storeid', 'id', 'store_id', 'location id', 'locationid', 'store code', 'code'],
+        name: ['name', 'store name', 'storename', 'location name', 'shop name', 'title'],
+        address1: ['address1', 'address 1', 'street', 'address', 'street address', 'addr1', 'line 1'],
+        address2: ['address2', 'address 2', 'suite', 'unit', 'addr2', 'address line 2', 'line 2'],
+        city: ['city', 'town', 'municipality', 'locality'],
+        state: ['state', 'province', 'state/province', 'state code', 'statecode', 'region'],
+        postal: ['postal', 'zip', 'postcode', 'postal code', 'zip code', 'zipcode', 'post code'],
+        country: ['country', 'country code', 'countrycode', 'nation'],
+        email: ['email', 'e-mail', 'mail', 'contact email', 'email address'],
+        phone: ['phone', 'telephone', 'tel', 'phone number', 'contact', 'contact number'],
+        storeHours: ['store hours', 'storehours', 'hours', 'opening hours', 'working hours', 'schedule'],
+        pageTitle: ['page title', 'pagetitle', 'title', 'store title', 'seo title'],
+        storeImages: ['store images', 'storeimages', 'images', 'image', 'photo', 'picture'],
+        services: ['services', 'service', 'amenities', 'features', 'store type'],
+        latitude: ['latitude', 'lat', 'gps lat', 'coord lat', 'y'],
+        longitude: ['longitude', 'lng', 'lon', 'long', 'gps lng', 'coord lng', 'x']
+      };
+      
+      // Check each cell to see if it matches a known header pattern
+      cells.forEach((cell, index) => {
+        const normalized = cell.toLowerCase().trim();
+        
+        // Skip empty cells
+        if (!normalized) return;
+        
+        // Try to match this cell to a field
+        for (const [fieldName, patterns] of Object.entries(headerPatterns)) {
+          if (patterns.some(pattern => normalized.includes(pattern) || pattern.includes(normalized))) {
+            mapping[index] = fieldName;
+            hasHeaders = true;
+            break;
+          }
+        }
+      });
+      
+      // If no headers detected, try intelligent content-based detection
+      if (!hasHeaders) {
+        console.log('🔍 No headers detected, using content-based field detection...');
+        return detectColumnsByContent(cells, brand);
+      }
+      
+      return { hasHeaders, mapping };
+    }
+
+    // Intelligent content-based column detection
+    function detectColumnsByContent(firstRowCells, brand) {
+      const mapping = {};
+      const usedIndices = new Set();
+      
+      // Pattern matchers for different field types
+      const patterns = {
+        email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        phone: /^[\+\(]?[\d\s\-\(\)]{8,}$/,
+        postal: /^[A-Z0-9]{2,10}(\s*[A-Z0-9]{2,10})?$/i,
+        country: /^[A-Z]{2,3}$/,
+        latitude: /^-?\d{1,2}[,\.]\d+$/,
+        longitude: /^-?\d{1,3}[,\.]\d+$/,
+        storeId: /^[A-Z0-9\-]{2,15}$/i,
+        url: /^(http|images?|\/|storelocator)/i,
+        hours: /(mon|tue|wed|thu|fri|sat|sun|am|pm|:|closed)/i,
+        array: /^\[.+\]$/,
+        verdadero: /^(verdadero|falso|true|false)$/i
+      };
+      
+      // First pass: Identify easily recognizable patterns
+      firstRowCells.forEach((cell, index) => {
+        const trimmed = cell.trim();
+        if (!trimmed || usedIndices.has(index)) return;
+        
+        // Email detection
+        if (patterns.email.test(trimmed)) {
+          mapping[index] = 'email';
+          usedIndices.add(index);
+        }
+        // Phone detection
+        else if (patterns.phone.test(trimmed) && trimmed.length >= 8) {
+          mapping[index] = 'phone';
+          usedIndices.add(index);
+        }
+        // Latitude detection (typically 2 digits before decimal)
+        else if (patterns.latitude.test(trimmed)) {
+          const num = parseFloat(trimmed.replace(',', '.'));
+          if (num >= -90 && num <= 90) {
+            mapping[index] = 'latitude';
+            usedIndices.add(index);
+          }
+        }
+        // Longitude detection (typically 3 digits or starts with -)
+        else if (patterns.longitude.test(trimmed)) {
+          const num = parseFloat(trimmed.replace(',', '.'));
+          if (num >= -180 && num <= 180) {
+            mapping[index] = 'longitude';
+            usedIndices.add(index);
+          }
+        }
+        // Country code detection (2-3 uppercase letters)
+        else if (patterns.country.test(trimmed) && trimmed.length <= 3) {
+          mapping[index] = 'country';
+          usedIndices.add(index);
+        }
+        // Postal code detection
+        else if (patterns.postal.test(trimmed) && trimmed.length >= 3 && trimmed.length <= 10) {
+          mapping[index] = 'postal';
+          usedIndices.add(index);
+        }
+        // Store hours detection
+        else if (patterns.hours.test(trimmed) && trimmed.length > 15) {
+          mapping[index] = 'storeHours';
+          usedIndices.add(index);
+        }
+        // Image URL detection
+        else if (patterns.url.test(trimmed) && trimmed.includes('image')) {
+          mapping[index] = 'storeImages';
+          usedIndices.add(index);
+        }
+        // Array-like values (services, related assets)
+        else if (patterns.array.test(trimmed)) {
+          // If contains 'Click' or 'Collect', it's likely services
+          if (trimmed.toLowerCase().includes('click') || trimmed.toLowerCase().includes('collect')) {
+            mapping[index] = 'services';
+          } else {
+            // Otherwise might be related assets or other metadata
+            mapping[index] = 'pageTitle'; // fallback
+          }
+          usedIndices.add(index);
+        }
+      });
+      
+      // Second pass: Positional and contextual detection
+      let storeIdIndex = -1;
+      let nameIndex = -1;
+      let addressIndex = -1;
+      let cityIndex = -1;
+      
+      firstRowCells.forEach((cell, index) => {
+        if (usedIndices.has(index)) return;
+        const trimmed = cell.trim();
+        if (!trimmed) return;
+        
+        // First non-assigned alphanumeric field is likely Store ID
+        if (storeIdIndex === -1 && patterns.storeId.test(trimmed)) {
+          mapping[index] = 'storeId';
+          storeIdIndex = index;
+          usedIndices.add(index);
+        }
+        // Next significant text field after ID is likely Name
+        else if (storeIdIndex !== -1 && nameIndex === -1 && trimmed.length > 3 && /[a-z]/i.test(trimmed)) {
+          mapping[index] = 'name';
+          nameIndex = index;
+          usedIndices.add(index);
+        }
+        // Next text field is likely Address
+        else if (nameIndex !== -1 && addressIndex === -1 && trimmed.length > 3) {
+          mapping[index] = 'address1';
+          addressIndex = index;
+          usedIndices.add(index);
+        }
+        // Field after address and before postal/country is likely City
+        else if (addressIndex !== -1 && cityIndex === -1 && !usedIndices.has(index + 1)) {
+          mapping[index] = 'city';
+          cityIndex = index;
+          usedIndices.add(index);
+        }
+      });
+      
+      // Third pass: Look for page title (often similar to store name but later in row)
+      firstRowCells.forEach((cell, index) => {
+        if (usedIndices.has(index)) return;
+        const trimmed = cell.trim();
+        
+        // If it looks like a title and we already have a name
+        if (nameIndex !== -1 && trimmed.length > 5 && /^[A-Z]/i.test(trimmed) && 
+            !patterns.url.test(trimmed) && !patterns.verdadero.test(trimmed)) {
+          // Check if it's similar to the name (likely page title)
+          const nameParts = firstRowCells[nameIndex].toLowerCase().split(/\s+/);
+          const cellLower = trimmed.toLowerCase();
+          const similarity = nameParts.filter(part => cellLower.includes(part)).length;
+          
+          if (similarity > 0 && !mapping[index]) {
+            mapping[index] = 'pageTitle';
+            usedIndices.add(index);
+          }
+        }
+      });
+      
+      console.log('📊 Content-based mapping result:', mapping);
+      console.log('✅ Detected fields:', Object.values(mapping).join(', '));
+      
+      return { 
+        hasHeaders: false, 
+        mapping,
+        isContentBased: true 
+      };
+    }
+
+    // Parse multi-line Aesop Excel record
+    function parseAesopMultiLineRecord(record) {
+      const convertDecimal = (val) => val ? val.replace(',', '.') : '';
+      const cleanArray = (val) => {
+        if (!val) return '';
+        // Remove brackets and quotes: ['item1', 'item2'] -> item1, item2
+        return val.replace(/[\[\]']/g, '').trim();
+      };
+      
+      try {
+        // Line 1: Store ID, Name, Address, City, Postal, Country, Country, Phone, ...
+        const line1Parts = record.line1.split('\t');
+        const storeId = line1Parts[0] || '';
+        const name = line1Parts[1] || '';
+        const address1 = line1Parts[2] || '';
+        const city = line1Parts[3] || '';
+        const postal = line1Parts[4] || '';
+        const country = line1Parts[5] || line1Parts[6] || ''; // Sometimes appears twice
+        const phone = line1Parts[7] || line1Parts[8] || ''; // Variable position
+        
+        // Line 2: Lat, Lng, Boolean, Boolean, StoreType, Name(?), Arrays
+        const line2Parts = record.line2.split(/[\t\s]+/);
+        let latitude = '';
+        let longitude = '';
+        let pageTitle = '';
+        
+        // Find coordinates in line 2
+        for (let i = 0; i < line2Parts.length; i++) {
+          const part = line2Parts[i];
+          if (/^-?\d+[,\.]\d+$/.test(part)) {
+            const num = parseFloat(part.replace(',', '.'));
+            if (num >= -90 && num <= 90 && !latitude) {
+              latitude = convertDecimal(part);
+            } else if (num >= -180 && num <= 180 && !longitude) {
+              longitude = convertDecimal(part);
+            }
+          }
+          // Look for page title (often contains the store name)
+          if (i > 3 && part.length > 5 && !part.includes('[') && !part.includes('VERDADERO') && !part.includes('SignatureStore')) {
+            pageTitle = part;
+          }
+        }
+        
+        // Line 3: Services array, Image URL, Email, Hours
+        const line3Parts = record.line3.split('\t');
+        let services = '';
+        let storeImages = '';
+        let email = '';
+        let storeHours = '';
+        
+        line3Parts.forEach(part => {
+          const trimmed = part.trim();
+          if (trimmed.startsWith('[')) {
+            // Array - likely services
+            if (!services && (trimmed.includes('Click') || trimmed.includes('Collect'))) {
+              services = cleanArray(trimmed);
+            }
+          } else if (trimmed.includes('@')) {
+            email = trimmed;
+          } else if (trimmed.includes('images/') || trimmed.includes('.jpg') || trimmed.includes('.png')) {
+            storeImages = trimmed;
+          } else if (trimmed.includes('Mon:') || trimmed.includes('Tue:') || trimmed.length > 50) {
+            storeHours = trimmed;
+          }
+        });
+        
+        console.log(`✅ Parsed store: ${storeId} - ${name}`);
+        
+        return {
+          storeId,
+          name,
+          address1,
+          address2: '',
+          city,
+          state: '',
+          postal,
+          country,
+          email,
+          phone,
+          storeHours,
+          pageTitle: pageTitle || name,
+          storeImages,
+          services,
+          latitude,
+          longitude
+        };
+      } catch (error) {
+        console.error('Error parsing multi-line record:', error, record);
+        return null;
+      }
+    }
+
+    // Parse a row using the detected column mapping
+    function parseRowWithMapping(cells, mapping, brand) {
+      const rowData = {
+        storeId: '',
+        name: '',
+        address1: '',
+        address2: '',
+        city: '',
+        state: '',
+        postal: '',
+        country: 'US',
+        email: '',
+        phone: '',
+        storeHours: '',
+        pageTitle: '',
+        storeImages: '',
+        services: '',
+        latitude: '',
+        longitude: ''
+      };
+      
+      // Check if this looks like the specific Aesop Excel format (20 columns with VERDADERO)
+      const isAesopExcelFormat = cells.length >= 15 && 
+                                 (cells.some(c => c === 'VERDADERO' || c === 'FALSO') ||
+                                  cells.some(c => c && c.includes('storelocator-')));
+      
+      if (isAesopExcelFormat && brand === 'aesop') {
+        // Use specialized Aesop Excel format parser
+        return parseAesopExcelFormat(cells);
+      }
+      
+      // Use standard column mapping for other formats
+      Object.entries(mapping).forEach(([colIndex, fieldName]) => {
+        const value = cells[parseInt(colIndex)];
+        if (value !== undefined) {
+          rowData[fieldName] = value;
+        }
+      });
+      
+      return rowData;
+    }
+
+    // Specialized parser for Aesop Excel export format
+    function parseAesopExcelFormat(cells) {
+      // Helper function to convert European decimals (comma) to standard (period)
+      const convertDecimal = (value) => {
+        if (!value) return '';
+        return value.toString().replace(',', '.');
+      };
+      
+      // Helper function to clean array-like strings
+      const cleanArray = (value) => {
+        if (!value) return '';
+        // Remove brackets and quotes, keep comma-separated values
+        return value.replace(/[\[\]']/g, '').trim();
+      };
+      
+      // Map the 20-column Aesop Excel format
+      // Column structure based on the actual data:
+      // 0:ID, 1:Name, 2:Address1, 3:City, 4:Postal, 5:State(empty), 6:CountryCode, 7:CountryName,
+      // 8:Phone, 9:Lat, 10:Lng, 11:OnlineOrder, 12:Pickup, 13:StoreType,
+      // 14:PageTitle, 15:RelatedAssets, 16:Services, 17:StoreImages, 18:Email, 19:StoreHours
+      
+      return {
+        storeId: cells[0] || '',
+        name: cells[1] || '',
+        address1: cells[2] || '',
+        address2: '', // Not in this Excel format
+        city: cells[3] || '',
+        state: cells[5] || '', // Usually empty for UK
+        postal: cells[4] || '',
+        country: cells[6] || 'UK',
+        email: cells[18] || '',
+        phone: cells[8] || '',
+        storeHours: cells[19] || '',
+        pageTitle: cells[14] || '',
+        storeImages: cells[17] || '',
+        services: cleanArray(cells[16] || cells[13] || ''), // Try services column first, then store type
+        latitude: convertDecimal(cells[9]),
+        longitude: convertDecimal(cells[10])
+      };
+    }
+
+    // Parse Kerastase row format
+    function parseKerastaseRow(cells) {
+      return {
+        storeId: cells[0] || '',
+        name: cells[1] || '',
+        address1: cells[2] || '',
+        address2: cells[3] || '',
+        city: cells[4] || '',
+        postal: cells[5] || '',
+        country: cells[6] || 'US',
+        phone: cells[7] || '',
+        services: cells[8] || '',
+        latitude: cells[9] || '',
+        longitude: cells[10] || ''
+      };
+    }
+
+    // Parse Aesop row format
+    function parseAesopRow(cells) {
+      return {
+        storeId: cells[0] || '',
+        name: cells[1] || '',
+        address1: cells[2] || '',
+        address2: cells[3] || '',
+        city: cells[4] || '',
+        state: cells[5] || '',
+        postal: cells[6] || '',
+        country: cells[7] || 'US',
+        email: cells[8] || '',
+        phone: cells[9] || '',
+        storeHours: cells[10] || '',
+        pageTitle: cells[11] || '',
+        storeImages: cells[12] || '',
+        services: cells[13] || '',
+        latitude: cells[14] || '',
+        longitude: cells[15] || ''
+      };
+    }
+
+    // Add store row with pre-filled data
+    function addStoreRowWithData(data, brand) {
+      const tableBody = document.getElementById('storeTableBody');
+      const row = document.createElement('tr');
+      row.className = 'hover:bg-gray-50 animate-fade-in-up';
+      
+      const servicesOptions = getServicesOptions(brand);
+      
+      row.innerHTML = `
+        <td class="px-4 py-3"><input type="text" class="corporate-input w-full" value="${data.storeId}" /></td>
+        <td class="px-4 py-3"><input type="text" class="corporate-input w-full" value="${data.name}" /></td>
+        <td class="px-4 py-3"><input type="text" class="corporate-input w-full" value="${data.address1}" /></td>
+        <td class="px-4 py-3"><input type="text" class="corporate-input w-full" value="${data.address2}" /></td>
+        <td class="px-4 py-3"><input type="text" class="corporate-input w-full" value="${data.city}" /></td>
+        <td class="px-4 py-3 aesop-field"><input type="text" class="corporate-input w-full" value="${data.state || ''}" /></td>
+        <td class="px-4 py-3"><input type="text" class="corporate-input w-full" value="${data.postal}" /></td>
+        <td class="px-4 py-3"><input type="text" class="corporate-input w-full" value="${data.country}" /></td>
+        <td class="px-4 py-3 aesop-field"><input type="email" class="corporate-input w-full" value="${data.email || ''}" /></td>
+        <td class="px-4 py-3"><input type="text" class="corporate-input w-full" value="${data.phone}" /></td>
+        <td class="px-4 py-3 aesop-field"><textarea class="corporate-input w-full" rows="2">${data.storeHours || ''}</textarea></td>
+        <td class="px-4 py-3 aesop-field"><input type="text" class="corporate-input w-full" value="${data.pageTitle || ''}" /></td>
+        <td class="px-4 py-3 aesop-field"><input type="text" class="corporate-input w-full" value="${data.storeImages || ''}" /></td>
+        <td class="px-2 py-3">
+          <select class="corporate-select w-full">
+            <option value="">Select Service</option>
+            ${servicesOptions}
+          </select>
+        </td>
+        <td class="px-4 py-3"><input type="text" class="corporate-input w-full" value="${data.latitude}" /></td>
+        <td class="px-4 py-3"><input type="text" class="corporate-input w-full" value="${data.longitude}" /></td>
+        <td class="px-2 py-3 text-center">
+          <input type="checkbox" class="corporate-checkbox" checked />
+        </td>
+        <td class="px-2 py-3 text-center">
+          <input type="checkbox" class="corporate-checkbox" checked />
+        </td>
+        <td class="px-4 py-3">
+          <button onclick="deleteRow(this)" class="px-3 py-1 bg-red-100 text-red-600 rounded hover:bg-red-200 transition-colors text-sm">
+            🗑️
+          </button>
+        </td>
+      `;
+      
+      tableBody.appendChild(row);
+      
+      // Set the service value if provided
+      if (data.services) {
+        const select = row.querySelector('select');
+        const option = select.querySelector(`option[value="${data.services}"]`);
+        if (option) {
+          select.value = data.services;
+        }
+      }
+      
+      // Style form elements
+      row.querySelectorAll('input[type="text"], input[type="email"]').forEach(input => {
+        input.className = 'w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200';
+      });
+      
+      row.querySelectorAll('select').forEach(select => {
+        select.className = 'w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 bg-white';
+      });
+      
+      row.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.className = 'w-5 h-5 text-purple-600 border-gray-300 rounded focus:ring-purple-500 focus:ring-2';
+      });
+    }
+
+    // Show import status
+    function showImportStatus(type, icon, message) {
+      const statusDiv = document.getElementById('importStatus');
+      const iconSpan = document.getElementById('importIcon');
+      const messageSpan = document.getElementById('importMessage');
+      
+      statusDiv.className = `p-3 rounded-lg ${type === 'success' ? 'bg-green-100 border border-green-200' : 'bg-red-100 border border-red-200'}`;
+      iconSpan.textContent = icon;
+      messageSpan.textContent = message;
+      messageSpan.className = `font-medium ${type === 'success' ? 'text-green-800' : 'text-red-800'}`;
+      
+      statusDiv.classList.remove('hidden');
+    }
+
+    // Hide import status
+    function hideImportStatus() {
+      document.getElementById('importStatus').classList.add('hidden');
+    }
+
+    // Delete row
+    function deleteRow(button) {
+      const row = button.closest('tr');
+      row.classList.add('animate-fade-out');
+      setTimeout(() => {
+        row.remove();
+        
+        // Show empty state if no rows left
+        const tableBody = document.getElementById('storeTableBody');
+        const emptyState = document.getElementById('emptyState');
+        if (tableBody.children.length === 0) {
+          emptyState.style.display = 'block';
+        }
+      }, 300);
+    }
+
+    // Generate XML
+    function generateXML() {
+      const tableBody = document.getElementById('storeTableBody');
+      const rows = tableBody.querySelectorAll('tr');
+      
+      if (rows.length === 0) {
+        alert('⚠️ Please add store location data before executing the transformation process.');
+        return;
+      }
+      
+      // Switch to processing tab
+      switchTab('processing');
+      
+      // Show processing status
+      const status = document.getElementById('processingStatus');
+      const progressBar = document.getElementById('progressBar');
+      status.classList.remove('hidden');
+      
+      // Simulate processing with progress
+      let progress = 0;
+      const progressInterval = setInterval(() => {
+        progress += Math.random() * 20;
+        if (progress > 100) progress = 100;
+        progressBar.style.width = progress + '%';
+        
+        if (progress >= 100) {
+          clearInterval(progressInterval);
+          setTimeout(() => {
+            generateActualXML(rows);
+            status.classList.add('hidden');
+            switchTab('output');
+          }, 1000);
+        }
+      }, 200);
+    }
+
+    // Generate actual XML
+    function generateActualXML(rows) {
+      let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+      xml += '<stores xmlns="http://www.demandware.com/xml/impex/store/2007-04-30">\n';
+      
+      const currentBrand = document.querySelector('input[name="brand"]:checked').value;
+      
+      rows.forEach((row, index) => {
+        const textInputs = row.querySelectorAll('input[type="text"]');
+        const emailInput = row.querySelector('input[type="email"]');
+        const select = row.querySelector('select');
+        const checkboxes = row.querySelectorAll('input[type="checkbox"]');
+        
+        // Map fields based on current brand structure
+        let fieldIndex = 0;
+        const id = escapeXML(textInputs[fieldIndex++].value.trim()) || `SALEM_${String(index + 1).padStart(3, '0')}`;
+        const name = escapeXML(textInputs[fieldIndex++].value.trim()) || 'Salem Store Location';
+        const address1 = escapeXML(textInputs[fieldIndex++].value.trim());
+        const address2 = escapeXML(textInputs[fieldIndex++].value.trim());
+        const city = escapeXML(textInputs[fieldIndex++].value.trim());
+        
+        // State is only present for Aesop
+        const state = currentBrand === 'aesop' ? escapeXML(textInputs[fieldIndex++].value.trim()) : '';
+        
+        const zipCode = escapeXML(textInputs[fieldIndex++].value.trim());
+        const country = escapeXML(textInputs[fieldIndex++].value.trim()) || 'US';
+        
+        // Email is only present for Aesop
+        const email = currentBrand === 'aesop' && emailInput ? escapeXML(emailInput.value.trim()) : '';
+        
+        const phone = escapeXML(textInputs[fieldIndex++].value.trim());
+        
+        // Store Hours, Page Title, Store Images (Aesop only)
+        let storeHours = '';
+        let pageTitle = '';
+        let storeImages = '';
+        
+        if (currentBrand === 'aesop') {
+          const textareas = row.querySelectorAll('textarea');
+          storeHours = textareas[0] ? escapeXML(textareas[0].value.trim()) : '';
+          pageTitle = textInputs[fieldIndex++] ? escapeXML(textInputs[fieldIndex-1].value.trim()) : '';
+          storeImages = textInputs[fieldIndex++] ? escapeXML(textInputs[fieldIndex-1].value.trim()) : '';
+        }
+        
+        const services = select ? select.value : '';
+        const latitude = escapeXML(textInputs[fieldIndex++].value.trim());
+        const longitude = escapeXML(textInputs[fieldIndex++].value.trim());
+        const onlineOrder = checkboxes[0] ? checkboxes[0].checked : true;
+        const pickup = checkboxes[1] ? checkboxes[1].checked : true;
+        
+        xml += `    <store store-id="${id}">\n`;
+        xml += `        <name>${name}</name>\n`;
+        xml += `        <address1>${address1}</address1>\n`;
+        if (address2) {
+          xml += `        <address2>${address2}</address2>\n`;
+        }
+        xml += `        <city>${city}</city>\n`;
+        if (zipCode) {
+          xml += `        <postal-code>${zipCode}</postal-code>\n`;
+        }
+        if (state) {
+          xml += `        <state-code>${state}</state-code>\n`;
+        }
+        xml += `        <country-code>${country}</country-code>\n`;
+        if (email) {
+          xml += `        <email>${email}</email>\n`;
+        }
+        xml += `        <phone>${phone}</phone>\n`;
+        if (storeHours && currentBrand === 'aesop') {
+          xml += `        <store-hours xml:lang="x-default">${escapeXML(storeHours)}</store-hours>\n`;
+        }
+        xml += `        <latitude>${latitude}</latitude>\n`;
+        xml += `        <longitude>${longitude}</longitude>\n`;
+        xml += `        <store-locator-enabled-flag>true</store-locator-enabled-flag>\n`;
+        xml += `        <demandware-pos-enabled-flag>${onlineOrder}</demandware-pos-enabled-flag>\n`;
+        xml += `        <pos-enabled-flag>${pickup}</pos-enabled-flag>\n`;
+        xml += `        <custom-attributes>\n`;
+        
+        // Add pageTitle for Aesop
+        if (pageTitle && currentBrand === 'aesop') {
+          xml += `            <custom-attribute attribute-id="pageTitle" xml:lang="x-default">${pageTitle}</custom-attribute>\n`;
+        }
+        
+        // Add relatedAssets
+        xml += `            <custom-attribute attribute-id="relatedAssets">\n`;
+        xml += `                <value>storelocator-store-map</value>\n`;
+        xml += `            </custom-attribute>\n`;
+        
+        // Add storeImages for Aesop
+        if (storeImages && currentBrand === 'aesop') {
+          xml += `            <custom-attribute attribute-id="storeImages" xml:lang="x-default">\n`;
+          xml += `                <value>${storeImages}</value>\n`;
+          xml += `            </custom-attribute>\n`;
+        }
+        
+        // Add type as "default" not "salem-certified"
+        xml += `            <custom-attribute attribute-id="type">\n`;
+        xml += `                <value>default</value>\n`;
+        xml += `            </custom-attribute>\n`;
+        
+        xml += `        </custom-attributes>\n`;
+        xml += `    </store>\n`;
+      });
+      
+      xml += '</stores>';
+      
+      // Display XML
+      document.getElementById('xmlOutput').textContent = xml;
+      generatedXML = xml;
+      
+      // Enable download button
+      document.getElementById('downloadBtn').disabled = false;
+      
+      // Setup download
+      const blob = new Blob([xml], { type: 'application/xml' });
+      const url = URL.createObjectURL(blob);
+      const downloadLink = document.getElementById('downloadLink');
+      downloadLink.href = url;
+      downloadLink.download = `salem-${currentBrand}-store-locations.xml`;
+    }
+
+    // Download XML
+    function downloadXML() {
+      if (generatedXML) {
+        document.getElementById('downloadLink').click();
+      }
+    }
+
+    // SFCC Validation System
+    function validateForSFCC() {
+      const tbody = document.getElementById('storeTableBody');
+      const rows = tbody.querySelectorAll('tr');
+      
+      if (rows.length === 0) {
+        alert('No store data to validate. Please add some stores first.');
+        return;
+      }
+      
+      showValidationModal();
+      runValidation(rows);
+    }
+
+    function showValidationModal() {
+      const modal = document.getElementById('validationModal');
+      modal.classList.remove('hidden');
+      
+      // Reset modal state
+      document.getElementById('validationProgress').classList.remove('hidden');
+      document.getElementById('validationSummary').classList.add('hidden');
+      document.getElementById('validationResults').classList.add('hidden');
+      document.getElementById('validationProgressBar').style.width = '0%';
+      document.getElementById('validationProgressText').textContent = 'Starting validation...';
+    }
+
+    function closeValidationModal() {
+      const modal = document.getElementById('validationModal');
+      modal.classList.add('hidden');
+    }
+
+    function runValidation(rows) {
+      const issues = [];
+      let validStores = 0;
+      let totalStores = rows.length;
+      
+      // Simulate progressive validation
+      let currentRow = 0;
+      
+      function validateNextStore() {
+        if (currentRow >= totalStores) {
+          showValidationResults(issues, validStores, totalStores);
+          return;
+        }
+        
+        const progress = ((currentRow + 1) / totalStores) * 100;
+        document.getElementById('validationProgressBar').style.width = progress + '%';
+        document.getElementById('validationProgressText').textContent = 
+          `Validating store ${currentRow + 1} of ${totalStores}...`;
+        
+        const row = rows[currentRow];
+        const storeIssues = validateStore(row, currentRow + 1);
+        
+        if (storeIssues.length === 0) {
+          validStores++;
+        } else {
+          issues.push(...storeIssues);
+        }
+        
+        currentRow++;
+        setTimeout(validateNextStore, 100); // Animate progress
+      }
+      
+      validateNextStore();
+    }
+
+    function validateStore(row, storeNumber) {
+      const cells = row.querySelectorAll('td input, td select, td textarea');
+      const issues = [];
+      
+      // Get brand to determine validation rules
+      const brand = document.querySelector('input[name="brand"]:checked').value;
+      
+      // Define field mappings based on brand
+      const fieldMap = brand === 'kerastase' ? {
+        storeId: 0, storeName: 1, address: 2, address2: 3, city: 4, 
+        postalCode: 5, countryCode: 6, phone: 7, 
+        latitude: 8, longitude: 9, services: 10
+      } : {
+        storeId: 0, storeName: 1, address: 2, address2: 3, city: 4, 
+        stateCode: 5, postalCode: 6, countryCode: 7, email: 8, phone: 9,
+        storeHours: 10, pageTitle: 11, storeImages: 12,
+        services: 13, latitude: 14, longitude: 15
+      };
+      
+      // Required field validation
+      const requiredFields = ['storeId', 'storeName', 'address', 'city', 'countryCode'];
+      requiredFields.forEach(field => {
+        const value = cells[fieldMap[field]]?.value?.trim();
+        if (!value) {
+          issues.push({
+            type: 'error',
+            store: storeNumber,
+            field: field,
+            message: `${field} is required for SFCC import`,
+            fix: `Please provide a value for ${field}`
+          });
+        }
+      });
+      
+      // Store ID validation (most critical)
+      const storeId = cells[fieldMap.storeId]?.value?.trim();
+      if (storeId) {
+        if (storeId.length > 256) {
+          issues.push({
+            type: 'error',
+            store: storeNumber,
+            field: 'storeId',
+            message: 'Store ID exceeds maximum length of 256 characters',
+            fix: 'Shorten the store ID to 256 characters or less'
+          });
+        }
+        if (/\s/.test(storeId)) {
+          issues.push({
+            type: 'error',
+            store: storeNumber,
+            field: 'storeId',
+            message: 'Store ID cannot contain whitespace characters',
+            fix: 'Remove spaces and whitespace from store ID'
+          });
+        }
+        if (!/^[a-zA-Z0-9_-]+$/.test(storeId)) {
+          issues.push({
+            type: 'warning',
+            store: storeNumber,
+            field: 'storeId',
+            message: 'Store ID contains special characters that may cause issues',
+            fix: 'Consider using only letters, numbers, hyphens, and underscores'
+          });
+        }
+      }
+      
+      // String length validations (256 char limit for most fields)
+      const stringFields = ['storeName', 'address', 'address2', 'city', 'stateCode', 'phone'];
+      stringFields.forEach(field => {
+        if (fieldMap[field] !== undefined) {
+          const value = cells[fieldMap[field]]?.value?.trim();
+          if (value && value.length > 256) {
+            issues.push({
+              type: 'error',
+              store: storeNumber,
+              field: field,
+              message: `${field} exceeds maximum length of 256 characters (current: ${value.length})`,
+              fix: `Shorten ${field} to 256 characters or less`
+            });
+          }
+        }
+      });
+      
+      // Country code validation
+      const countryCode = cells[fieldMap.countryCode]?.value?.trim();
+      if (countryCode) {
+        if (countryCode.length !== 2) {
+          issues.push({
+            type: 'error',
+            store: storeNumber,
+            field: 'countryCode',
+            message: 'Country code must be exactly 2 characters (ISO 3166-1 alpha-2)',
+            fix: 'Use 2-letter country codes like "US", "CA", "GB", "FR"'
+          });
+        }
+        if (!/^[A-Z]{2}$/.test(countryCode)) {
+          issues.push({
+            type: 'warning',
+            store: storeNumber,
+            field: 'countryCode',
+            message: 'Country code should be uppercase letters',
+            fix: 'Convert country code to uppercase (e.g., "us" → "US")'
+          });
+        }
+      }
+      
+      // Coordinate validation
+      const latitude = cells[fieldMap.latitude]?.value?.trim();
+      const longitude = cells[fieldMap.longitude]?.value?.trim();
+      
+      if (latitude) {
+        const lat = parseFloat(latitude);
+        if (isNaN(lat)) {
+          issues.push({
+            type: 'error',
+            store: storeNumber,
+            field: 'latitude',
+            message: 'Latitude must be a valid number',
+            fix: 'Provide latitude as a decimal number (e.g., 40.7128)'
+          });
+        } else if (lat < -90 || lat > 90) {
+          issues.push({
+            type: 'error',
+            store: storeNumber,
+            field: 'latitude',
+            message: 'Latitude must be between -90 and +90 degrees',
+            fix: 'Check latitude value and ensure it\'s within valid range'
+          });
+        }
+      }
+      
+      if (longitude) {
+        const lng = parseFloat(longitude);
+        if (isNaN(lng)) {
+          issues.push({
+            type: 'error',
+            store: storeNumber,
+            field: 'longitude',
+            message: 'Longitude must be a valid number',
+            fix: 'Provide longitude as a decimal number (e.g., -74.0060)'
+          });
+        } else if (lng < -180 || lng > 180) {
+          issues.push({
+            type: 'error',
+            store: storeNumber,
+            field: 'longitude',
+            message: 'Longitude must be between -180 and +180 degrees',
+            fix: 'Check longitude value and ensure it\'s within valid range'
+          });
+        }
+      }
+      
+      // Email validation (for Aesop)
+      if (brand === 'aesop' && fieldMap.email !== undefined) {
+        const email = cells[fieldMap.email]?.value?.trim();
+        if (email) {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(email)) {
+            issues.push({
+              type: 'warning',
+              store: storeNumber,
+              field: 'email',
+              message: 'Email format appears invalid',
+              fix: 'Check email format (e.g., store@company.com)'
+            });
+          }
+        }
+      }
+      
+      // Postal code validation
+      const postalCode = cells[fieldMap.postalCode]?.value?.trim();
+      if (postalCode && postalCode.length > 10) {
+        issues.push({
+          type: 'warning',
+          store: storeNumber,
+          field: 'postalCode',
+          message: 'Postal code may be too long for some systems',
+          fix: 'Consider shortening postal code if possible'
+        });
+      }
+      
+      return issues;
+    }
+
+    function showValidationResults(issues, validStores, totalStores) {
+      // Hide progress, show results
+      document.getElementById('validationProgress').classList.add('hidden');
+      document.getElementById('validationSummary').classList.remove('hidden');
+      document.getElementById('validationResults').classList.remove('hidden');
+      
+      // Count issues by type
+      const errors = issues.filter(issue => issue.type === 'error');
+      const warnings = issues.filter(issue => issue.type === 'warning');
+      
+      // Play error beep if there are critical errors
+      if (errors.length > 0) {
+        try {
+          const errorBeep = document.getElementById('errorBeep');
+          errorBeep.currentTime = 0; // Reset to beginning
+          errorBeep.play().catch(e => {
+            console.log('Could not play error sound:', e);
+          });
+        } catch (e) {
+          console.log('Error sound not available:', e);
+        }
+      }
+      
+      // Update summary
+      document.getElementById('errorCount').textContent = errors.length;
+      document.getElementById('warningCount').textContent = warnings.length;
+      document.getElementById('successCount').textContent = validStores;
+      
+      // Update status and buttons
+      const statusEl = document.getElementById('validationStatus');
+      const proceedBtn = document.getElementById('proceedWithWarnings');
+      const fixBtn = document.getElementById('fixIssues');
+      const generateBtn = document.getElementById('generateXMLBtn');
+      
+      if (errors.length > 0) {
+        statusEl.textContent = `${errors.length} critical errors must be fixed before XML generation`;
+        fixBtn.classList.remove('hidden');
+        proceedBtn.classList.add('hidden');
+        generateBtn.classList.add('hidden');
+      } else if (warnings.length > 0) {
+        statusEl.textContent = `${warnings.length} warnings found. You may proceed or fix them first.`;
+        proceedBtn.classList.remove('hidden');
+        fixBtn.classList.add('hidden');
+        generateBtn.classList.add('hidden');
+      } else {
+        statusEl.textContent = 'All validations passed! Ready to generate XML.';
+        generateBtn.classList.remove('hidden');
+        proceedBtn.classList.add('hidden');
+        fixBtn.classList.add('hidden');
+      }
+      
+      // Display issues
+      displayValidationIssues(issues);
+    }
+
+    function displayValidationIssues(issues) {
+      const resultsDiv = document.getElementById('validationResults');
+      resultsDiv.innerHTML = '';
+      
+      if (issues.length === 0) {
+        resultsDiv.innerHTML = `
+          <div class="text-center py-8">
+            <div class="text-6xl mb-4">🎉</div>
+            <h3 class="text-xl font-bold text-green-600 mb-2">Perfect Validation!</h3>
+            <p class="text-corporate-600">All stores meet SFCC requirements and are ready for import.</p>
+          </div>
+        `;
+        return;
+      }
+      
+      // Group issues by store
+      const storeGroups = {};
+      issues.forEach(issue => {
+        if (!storeGroups[issue.store]) {
+          storeGroups[issue.store] = [];
+        }
+        storeGroups[issue.store].push(issue);
+      });
+      
+      Object.keys(storeGroups).sort((a, b) => parseInt(a) - parseInt(b)).forEach(storeNum => {
+        const storeIssues = storeGroups[storeNum];
+        const hasErrors = storeIssues.some(issue => issue.type === 'error');
+        
+        const storeDiv = document.createElement('div');
+        storeDiv.className = `border rounded-lg p-4 ${hasErrors ? 'border-red-200 bg-red-50' : 'border-yellow-200 bg-yellow-50'}`;
+        
+        storeDiv.innerHTML = `
+          <h4 class="font-bold text-lg mb-3 flex items-center">
+            <span class="mr-2">${hasErrors ? '❌' : '⚠️'}</span>
+            Store Row ${storeNum}
+            <span class="ml-2 text-sm font-normal ${hasErrors ? 'text-red-600' : 'text-yellow-600'}">
+              (${storeIssues.length} issue${storeIssues.length > 1 ? 's' : ''})
+            </span>
+          </h4>
+          <div class="space-y-2">
+            ${storeIssues.map(issue => `
+              <div class="flex items-start space-x-3 p-3 bg-white rounded border-l-4 ${
+                issue.type === 'error' ? 'border-red-500' : 'border-yellow-500'
+              }">
+                <div class="flex-shrink-0 mt-1">
+                  ${issue.type === 'error' ? '🚫' : '⚠️'}
+                </div>
+                <div class="flex-grow">
+                  <div class="font-medium ${issue.type === 'error' ? 'text-red-800' : 'text-yellow-800'}">
+                    ${issue.field}: ${issue.message}
+                  </div>
+                  <div class="text-sm ${issue.type === 'error' ? 'text-red-600' : 'text-yellow-600'} mt-1">
+                    💡 ${issue.fix}
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+        
+        resultsDiv.appendChild(storeDiv);
+      });
+    }
+
+    function proceedWithValidation() {
+      closeValidationModal();
+      generateXML(); // Proceed with XML generation
+    }
+
+    // Escape XML characters
+    function escapeXML(str) {
+      return str.replace(/[<>&'"]/g, function (c) {
         switch (c) {
           case '<': return '&lt;';
           case '>': return '&gt;';
@@ -614,167 +2110,44 @@
         }
       });
     }
+
+    // Initialize with sample data
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add some sample rows for demonstration
+      addStoreRow();
+      addStoreRow();
+      
+      // Fill first row with sample data
+      const firstRow = document.getElementById('storeTableBody').children[0];
+      if (firstRow) {
+        const inputs = firstRow.querySelectorAll('input');
+        inputs[0].value = 'SALEM_001';
+        inputs[1].value = 'SALEM Enterprise Store';
+        inputs[2].value = '123 Commerce Street';
+        inputs[3].value = 'Business District';
+        inputs[4].value = '10001';
+        inputs[5].value = 'US';
+        inputs[6].value = '+1-212-555-0123';
+        inputs[7].value = '40.7128';
+        inputs[8].value = '-74.0060';
+      }
+    });
+
+    // Add CSS for fade-out animation
+    const style = document.createElement('style');
+    style.textContent = `
+      .animate-fade-out {
+        opacity: 0;
+        transform: translateX(-20px);
+        transition: all 0.3s ease;
+      }
+    `;
+    document.head.appendChild(style);
     
-    // Function to escape HTML for attribute values
-    function escapeHTML(str) {
-      if (!str) return "";
-      return str.replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#39;");
-    }
-
-    // Show loading animation
-    function showLoading() {
-      document.getElementById("loadingAnimation").style.display = "block";
-    }
-
-    // Hide loading animation
-    function hideLoading() {
-      document.getElementById("loadingAnimation").style.display = "none";
-    }
-
-    // Add success animation to element
-    function addSuccessAnimation(element) {
-      element.classList.add('success-animation');
-      setTimeout(() => {
-        element.classList.remove('success-animation');
-      }, 500);
-    }
-
-    // Import data from pasted Excel text
-    document.getElementById("importBtn").addEventListener("click", function () {
-      const pasteData = document.getElementById("pasteArea").value;
-      const lines = pasteData.split(/\r?\n/);
-      
-      if (lines.length < 2) {
-        alert("⚠️ Please include the header row and at least one data row!");
-        return;
-      }
-
-      showLoading();
-      
-      setTimeout(() => {
-        const tableBody = document.getElementById("tableBody");
-        tableBody.innerHTML = ""; // Clear current table
-        
-        for (let i = 1; i < lines.length; i++) {
-          const line = lines[i].trim();
-          if (!line) continue;
-          const cols = line.split("\t");
-          if (cols.length < 9) continue; // skip if not enough columns
-          
-          const newRow = document.createElement("tr");
-          newRow.innerHTML = `
-            <td><input type="text" value="${escapeHTML(cols[0])}" placeholder="ID" /></td>
-            <td><input type="text" value="${escapeHTML(cols[1])}" placeholder="NAME OF STORE" /></td>
-            <td><input type="text" value="${escapeHTML(cols[2])}" placeholder="ADDRESS" /></td>
-            <td><input type="text" value="${escapeHTML(cols[3])}" placeholder="CITY" /></td>
-            <td><input type="text" value="${escapeHTML(cols[4])}" placeholder="ZIP CODE" /></td>
-            <td><input type="text" value="${escapeHTML(cols[5])}" placeholder="COUNTRY" /></td>
-            <td><input type="text" value="${escapeHTML(cols[6])}" placeholder="PHONE" /></td>
-            <td><input type="text" value="${escapeHTML(cols[7])}" placeholder="LATITUDE" /></td>
-            <td><input type="text" value="${escapeHTML(cols[8])}" placeholder="LONGITUDE" /></td>
-          `;
-          tableBody.appendChild(newRow);
-        }
-        
-        hideLoading();
-        addSuccessAnimation(document.getElementById("dataTable"));
-      }, 1000);
-    });
-
-    // Add a new empty row manually
-    document.getElementById("addRowBtn").addEventListener("click", function () {
-      const tableBody = document.getElementById("tableBody");
-      const newRow = document.createElement("tr");
-      newRow.innerHTML = `
-        <td><input type="text" placeholder="ID" /></td>
-        <td><input type="text" placeholder="NAME OF STORE" /></td>
-        <td><input type="text" placeholder="ADDRESS" /></td>
-        <td><input type="text" placeholder="CITY" /></td>
-        <td><input type="text" placeholder="ZIP CODE" /></td>
-        <td><input type="text" placeholder="COUNTRY" /></td>
-        <td><input type="text" placeholder="PHONE" /></td>
-        <td><input type="text" placeholder="LATITUDE" /></td>
-        <td><input type="text" placeholder="LONGITUDE" /></td>
-      `;
-      tableBody.appendChild(newRow);
-      addSuccessAnimation(newRow);
-    });
-
-    // Generate XML from table data
-    document.getElementById("generateBtn").addEventListener("click", function () {
-      const tableBody = document.getElementById("tableBody");
-      const rows = tableBody.getElementsByTagName("tr");
-
-      if (rows.length === 0) {
-        alert("⚠️ Please add some store data first!");
-        return;
-      }
-
-      showLoading();
-
-      setTimeout(() => {
-        let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
-        xml += '<stores xmlns="http://www.demandware.com/xml/impex/store/2007-04-30">\n';
-
-        for (let i = 0; i < rows.length; i++) {
-          const inputs = rows[i].getElementsByTagName("input");
-          const id = escapeXML(inputs[0].value.trim());
-          const name = escapeXML(inputs[1].value.trim());
-          const address = escapeXML(inputs[2].value.trim());
-          const city = escapeXML(inputs[3].value.trim());
-          const zipCode = escapeXML(inputs[4].value.trim());
-          const country = escapeXML(inputs[5].value.trim());
-          const phone = escapeXML(inputs[6].value.trim());
-          const latitude = escapeXML(inputs[7].value.trim());
-          const longitude = escapeXML(inputs[8].value.trim());
-
-          if (id || name || address) { // Only add stores with at least some data
-            xml += '    <store store-id="' + id + '">\n';
-            xml += '        <name>' + name + '</name>\n';
-            xml += '        <address1>' + address + '</address1>\n';
-            xml += '        <city>' + city + '</city>\n';
-            xml += '        <postal-code>' + zipCode + '</postal-code>\n';
-            xml += '        <country-code>' + country + '</country-code>\n';
-            xml += '        <phone>' + phone + '</phone>\n';
-            xml += '        <latitude>' + latitude + '</latitude>\n';
-            xml += '        <longitude>' + longitude + '</longitude>\n';
-            xml += '        <store-locator-enabled-flag>true</store-locator-enabled-flag>\n';
-            xml += '        <demandware-pos-enabled-flag>true</demandware-pos-enabled-flag>\n';
-            xml += '        <pos-enabled-flag>true</pos-enabled-flag>\n';
-            xml += '        <custom-attributes>\n';
-            xml += '            <custom-attribute attribute-id="type">\n';
-            xml += '                <value>default</value>\n';
-            xml += '            </custom-attribute>\n';
-            xml += '        </custom-attributes>\n';
-            xml += '    </store>\n';
-          }
-        }
-        xml += '</stores>';
-
-        // Display the pretty XML in the preview area
-        document.getElementById("xmlOutput").textContent = xml;
-
-        // Create a Blob and set up the download link
-        const blob = new Blob([xml], { type: 'text/xml' });
-        const url = URL.createObjectURL(blob);
-        document.getElementById("downloadLink").href = url;
-
-        hideLoading();
-        addSuccessAnimation(document.getElementById("xmlOutput"));
-      }, 1500);
-    });
-
-    // Add click sound effect (optional)
-    document.querySelectorAll('.neon-button').forEach(button => {
-      button.addEventListener('click', function() {
-        // You can add a sound effect here if desired
-        // const audio = new Audio('click-sound.mp3');
-        // audio.play();
-      });
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+      // Page initialized with smart column detection enabled
+      console.log('🚀 SALEM initialized with smart column detection');
     });
   </script>
 </body>
