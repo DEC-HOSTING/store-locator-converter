@@ -275,7 +275,7 @@
         <div class="relative animate-fade-in">
           <div class="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-3xl blur-3xl"></div>
           <div class="relative bg-white/40 backdrop-blur-xl rounded-3xl p-8 border border-white/30">
-            <img src="imgs/salemista.png" alt="Salem - Chief Feline Officer & Data Transformation Expert" class="w-full h-auto rounded-2xl shadow-2xl hover-lift object-cover" />
+            <img src="imgs/salemista.png" alt="Salem - Chief Feline Officer & Data Transformation Expert" class="w-1/2 h-auto rounded-2xl shadow-2xl hover-lift object-cover mx-auto" />
             <div class="absolute top-4 right-4 bg-purple-500 text-white px-3 py-1 rounded-full text-sm font-medium flex items-center">
               <span class="mr-1">🐾</span> SALEM Active
             </div>
@@ -352,15 +352,20 @@
                     </h4>
                     <p class="text-corporate-600 text-sm">Select your brand to customize data fields and services</p>
                   </div>
-                  <div class="flex space-x-4">
-                    <label class="flex items-center cursor-pointer">
-                      <input type="radio" name="brand" value="kerastase" checked class="mr-2 text-purple-600" onchange="switchBrand('kerastase')">
-                      <span class="text-corporate-800 font-medium">Kérastase</span>
-                    </label>
-                    <label class="flex items-center cursor-pointer">
-                      <input type="radio" name="brand" value="aesop" class="mr-2 text-purple-600" onchange="switchBrand('aesop')">
-                      <span class="text-corporate-800 font-medium">Aesop</span>
-                    </label>
+                  <div class="flex items-center space-x-4">
+                    <div class="flex space-x-4">
+                      <label class="flex items-center cursor-pointer">
+                        <input type="radio" name="brand" value="kerastase" checked class="mr-2 text-purple-600" onchange="switchBrand('kerastase')">
+                        <span class="text-corporate-800 font-medium">Kérastase</span>
+                      </label>
+                      <label class="flex items-center cursor-pointer">
+                        <input type="radio" name="brand" value="aesop" class="mr-2 text-purple-600" onchange="switchBrand('aesop')">
+                        <span class="text-corporate-800 font-medium">Aesop</span>
+                      </label>
+                    </div>
+                    <button onclick="manageCustomServices()" class="px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors text-sm font-medium">
+                      ⚙️ Manage Services
+                    </button>
                   </div>
                 </div>
               </div>
@@ -717,7 +722,7 @@ No data processed yet. Please add store locations and generate XML to see result
         <td class="px-4 py-3 aesop-field"><input type="text" class="corporate-input w-full" placeholder="Store Page Title" /></td>
         <td class="px-4 py-3 aesop-field"><input type="text" class="corporate-input w-full" placeholder="images/stores/store.jpg" /></td>
         <td class="px-2 py-3">
-          <select class="corporate-select w-full">
+          <select class="corporate-select w-full" onchange="handleServiceChange(this)">
             <option value="">Select Service</option>
             ${servicesOptions}
           </select>
@@ -770,34 +775,194 @@ No data processed yet. Please add store locations and generate XML to see result
           { value: 'full-service', label: 'Full Service Salon' }
         ],
         aesop: [
-          { value: 'ClickAndCollect', label: 'Click & Collect' },
-          { value: 'consultation', label: 'Skin Consultation' },
-          { value: 'gift-wrapping', label: 'Gift Wrapping' },
-          { value: 'default', label: 'Standard Aesop Services' }
+          { value: 'ClickAndCollect', label: 'Click & Collect' }
         ]
       };
       
-      return services[brand].map(service => 
+      // Get custom services from localStorage for THIS specific brand
+      const customServicesKey = `custom_services_${brand}`;
+      const customServices = JSON.parse(localStorage.getItem(customServicesKey) || '[]');
+      
+      console.log(`🏷️ Loading services for ${brand}:`, {
+        default: services[brand].length,
+        custom: customServices.length,
+        customList: customServices
+      });
+      
+      // Combine default and custom services for this brand only
+      const allServices = [...services[brand], ...customServices];
+      
+      let optionsHTML = allServices.map(service => 
         `<option value="${service.value}">${service.label}</option>`
       ).join('');
+      
+      // Add "Add Custom Service" option
+      optionsHTML += `<option value="__ADD_CUSTOM__" style="color: #9333ea; font-weight: bold;">➕ Add Custom Service...</option>`;
+      
+      return optionsHTML;
+    }
+
+    // Handle service selection change
+    function handleServiceChange(selectElement) {
+      if (selectElement.value === '__ADD_CUSTOM__') {
+        const brand = document.querySelector('input[name="brand"]:checked').value;
+        const customService = prompt('Enter custom service name:');
+        
+        if (customService && customService.trim()) {
+          const serviceValue = customService.trim().toLowerCase().replace(/\s+/g, '-');
+          const serviceLabel = customService.trim();
+          
+          // Save to localStorage
+          const customServicesKey = `custom_services_${brand}`;
+          const customServices = JSON.parse(localStorage.getItem(customServicesKey) || '[]');
+          
+          // Check if it already exists
+          const exists = customServices.some(s => s.value === serviceValue);
+          
+          if (!exists) {
+            customServices.push({ value: serviceValue, label: serviceLabel });
+            localStorage.setItem(customServicesKey, JSON.stringify(customServices));
+            console.log(`✅ Added custom service: ${serviceLabel} (${serviceValue}) for ${brand}`);
+          }
+          
+          // Refresh all service dropdowns with the updated brand services
+          refreshServiceDropdowns(brand);
+          
+          // Set the newly added/selected service on THIS specific dropdown
+          // Use a longer timeout to ensure DOM update completes
+          setTimeout(() => {
+            // Find the option again to ensure it exists
+            const option = selectElement.querySelector(`option[value="${serviceValue}"]`);
+            if (option) {
+              selectElement.value = serviceValue;
+              console.log(`✅ Selected service: ${serviceValue}`);
+            } else {
+              console.error(`❌ Could not find option with value: ${serviceValue}`);
+              console.log('Available options:', Array.from(selectElement.options).map(o => o.value));
+            }
+          }, 50);
+          
+          if (!exists) {
+            alert(`✅ Custom service "${serviceLabel}" added successfully!`);
+          }
+        } else {
+          // User cancelled, reset to empty
+          selectElement.value = '';
+        }
+      }
+    }
+
+    // Refresh all service dropdowns
+    function refreshServiceDropdowns(brand) {
+      document.querySelectorAll('select.corporate-select').forEach(select => {
+        const currentValue = select.value;
+        const newOptions = '<option value="">Select Service</option>' + getServicesOptions(brand);
+        select.innerHTML = newOptions;
+        
+        // Try to preserve selection if it exists in the new options
+        if (currentValue && currentValue !== '__ADD_CUSTOM__') {
+          const newOption = select.querySelector(`option[value="${currentValue}"]`);
+          if (newOption) {
+            select.value = currentValue;
+          }
+        }
+      });
+    }
+
+    // Manage custom services
+    function manageCustomServices() {
+      const brand = document.querySelector('input[name="brand"]:checked').value;
+      const brandName = brand === 'aesop' ? 'Aesop' : 'Kérastase';
+      const customServicesKey = `custom_services_${brand}`;
+      const customServices = JSON.parse(localStorage.getItem(customServicesKey) || '[]');
+      
+      let message = `🛠️ Custom Services Manager - ${brandName}\n\n`;
+      
+      if (customServices.length === 0) {
+        message += 'No custom services added yet.\n\n';
+      } else {
+        message += 'Current custom services:\n';
+        customServices.forEach((service, index) => {
+          message += `${index + 1}. ${service.label} (${service.value})\n`;
+        });
+        message += '\n';
+      }
+      
+      message += 'Options:\n';
+      message += '1. Add new custom service\n';
+      message += '2. Delete custom service\n';
+      message += '3. Clear all custom services\n';
+      message += '4. Cancel\n\n';
+      message += 'Enter your choice (1-4):';
+      
+      const choice = prompt(message);
+      
+      if (choice === '1') {
+        const serviceName = prompt('Enter new service name:');
+        if (serviceName && serviceName.trim()) {
+          const serviceValue = serviceName.trim().toLowerCase().replace(/\s+/g, '-');
+          const serviceLabel = serviceName.trim();
+          
+          const exists = customServices.some(s => s.value === serviceValue);
+          if (!exists) {
+            customServices.push({ value: serviceValue, label: serviceLabel });
+            localStorage.setItem(customServicesKey, JSON.stringify(customServices));
+            refreshServiceDropdowns(brand);
+            alert(`✅ Service "${serviceLabel}" added successfully!`);
+          } else {
+            alert('⚠️ This service already exists!');
+          }
+        }
+      } else if (choice === '2') {
+        if (customServices.length === 0) {
+          alert('⚠️ No custom services to delete!');
+        } else {
+          let deleteMsg = 'Select service to delete:\n\n';
+          customServices.forEach((service, index) => {
+            deleteMsg += `${index + 1}. ${service.label}\n`;
+          });
+          deleteMsg += '\nEnter number to delete:';
+          
+          const deleteChoice = parseInt(prompt(deleteMsg));
+          if (deleteChoice && deleteChoice >= 1 && deleteChoice <= customServices.length) {
+            const deleted = customServices.splice(deleteChoice - 1, 1)[0];
+            localStorage.setItem(customServicesKey, JSON.stringify(customServices));
+            refreshServiceDropdowns(brand);
+            alert(`✅ Service "${deleted.label}" deleted successfully!`);
+          }
+        }
+      } else if (choice === '3') {
+        if (confirm('⚠️ Are you sure you want to delete ALL custom services?')) {
+          localStorage.removeItem(customServicesKey);
+          refreshServiceDropdowns(brand);
+          alert('✅ All custom services cleared!');
+        }
+      }
     }
 
     // Switch brand configuration
     function switchBrand(brand) {
+      console.log(`🔄 Switching to brand: ${brand}`);
+      
       const table = document.querySelector('.corporate-table').closest('.bg-white');
       table.className = table.className.replace(/brand-\w+/, '') + ` brand-${brand}`;
       
-      // Update existing service dropdowns
+      // Update existing service dropdowns with the correct brand
       document.querySelectorAll('select.corporate-select').forEach(select => {
         const currentValue = select.value;
-        select.innerHTML = '<option value="">Select Service</option>' + getServicesOptions(brand);
+        const newOptions = '<option value="">Select Service</option>' + getServicesOptions(brand);
+        select.innerHTML = newOptions;
         
         // Try to preserve selection if it exists in new options
         const newOption = select.querySelector(`option[value="${currentValue}"]`);
-        if (newOption) {
+        if (newOption && currentValue !== '__ADD_CUSTOM__') {
           select.value = currentValue;
+        } else {
+          select.value = ''; // Reset if service doesn't exist in new brand
         }
       });
+      
+      console.log(`✅ Brand switched to ${brand}, dropdowns updated`);
     }
 
     // Show import help
@@ -1480,7 +1645,7 @@ No data processed yet. Please add store locations and generate XML to see result
         <td class="px-4 py-3 aesop-field"><input type="text" class="corporate-input w-full" value="${data.pageTitle || ''}" /></td>
         <td class="px-4 py-3 aesop-field"><input type="text" class="corporate-input w-full" value="${data.storeImages || ''}" /></td>
         <td class="px-2 py-3">
-          <select class="corporate-select w-full">
+          <select class="corporate-select w-full" onchange="handleServiceChange(this)">
             <option value="">Select Service</option>
             ${servicesOptions}
           </select>
