@@ -1806,8 +1806,13 @@ No data processed yet. Please add store locations and generate XML to see result
         }
         
         const services = select ? select.value : '';
-        const latitude = escapeXML(textInputs[fieldIndex++].value.trim());
-        const longitude = escapeXML(textInputs[fieldIndex++].value.trim());
+        
+        // Convert European decimal format (comma) to standard (period) for coordinates
+        const latitudeRaw = textInputs[fieldIndex++].value.trim();
+        const longitudeRaw = textInputs[fieldIndex++].value.trim();
+        const latitude = escapeXML(latitudeRaw.replace(',', '.'));
+        const longitude = escapeXML(longitudeRaw.replace(',', '.'));
+        
         const onlineOrder = checkboxes[0] ? checkboxes[0].checked : true;
         const pickup = checkboxes[1] ? checkboxes[1].checked : true;
         
